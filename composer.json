@@ -1,0 +1,8 @@
+{
+  "name": "kumaranujranchi/premiumott",
+  "description": "Premium OTT Store backend",
+  "type": "project",
+  "require": {
+    "php": ">=8.0"
+  }
+}
