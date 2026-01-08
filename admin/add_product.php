@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $discounted_price = $_POST['discounted_price'];
     $rating = $_POST['rating'] ?: 5.0;
     $reviews = $_POST['reviews'] ?: 0;
-    $discount_percent = round((($original_price - $discounted_price) / $original_price) * 100);
+    $discount_percent = $_POST['discount_percent'];
     $category = $_POST['category'];
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
@@ -20,44 +20,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $image = "";
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $targetDir = "../uploads/products/";
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir, 0777, true);
-        }
-        $fileName = time() . '_' . basename($_FILES["image"]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'webp');
-        if (in_array(strtolower($fileType), $allowTypes)) {
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
-                $image = "uploads/products/" . $fileName;
-            }
+        $upload_dir = '../uploads/products/';
+        if (!is_dir($upload_dir))
+            mkdir($upload_dir, 0777, true);
+        $file_ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $file_name = time() . '_' . uniqid() . '.' . $file_ext;
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $file_name)) {
+            $image = 'uploads/products/' . $file_name;
         }
     }
 
     try {
         $pdo->beginTransaction();
-
         $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image, currency, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $is_active]);
-
         $productId = $pdo->lastInsertId();
-
+        $stmt = $pdo->prepare("INSERT INTO product_features (product_id, feature_text) VALUES (?, ?)");
         foreach ($features as $feature) {
-            $feature = trim($feature);
-            if (!empty($feature)) {
-                $fStmt = $pdo->prepare("INSERT INTO product_features (product_id, feature_text) VALUES (?, ?)");
-                $fStmt->execute([$productId, $feature]);
-            }
+            if (trim($feature))
+                $stmt->execute([$productId, trim($feature)]);
         }
-
         $pdo->commit();
         header("Location: index.php");
         exit;
     } catch (Exception $e) {
         $pdo->rollBack();
-        $error = "Error: " . $e->getMessage();
+        die("Error: " . $e->getMessage());
     }
 }
 ?>
@@ -67,203 +55,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product - Premium OTT Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #3DFE02;
-            --bg: #F9FAFB;
-            --card: #FFFFFF;
-            --text: #111827;
-            --border: #E5E7EB;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            padding: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: #374151;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            height: 100px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-        }
-    </style>
+    <title>New Product - Premium OTT Store Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="index.php" class="back-link">← Back</a>
-            <h1>Add New Product</h1>
-        </div>
+    <div class="admin-container" style="max-width: 900px;">
+        <header class="admin-header">
+            <div>
+                <h1>Create New Product</h1>
+                <p style="color: var(--text-dim); margin-top: 4px; font-size: 14px;">Define a new premium subscription
+                    plan for your store</p>
+            </div>
+            <a href="index.php" class="btn btn-outline">
+                <i data-lucide="x"></i> Cancel
+            </a>
+        </header>
 
-        <?php if (isset($error)): ?>
-            <div style="background: #FEE2E2; color: #B91C1C; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
-
-        <form action="" method="POST" class="card" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Product Image</label>
-                <input type="file" name="image" accept="image/*">
-            </div>
-            <div class="form-group">
-                <label>Product Name</label>
-                <input type="text" name="name" required placeholder="e.g. Nexus CRM">
-            </div>
-            <div class="form-group">
-                <label>Tagline</label>
-                <input type="text" name="tagline" required placeholder="Short catchy description">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" required placeholder="Detailed product description"></textarea>
-            </div>
-
-            <div class="grid">
-                <div class="form-group">
-                    <label>Original Price</label>
-                    <div style="display: flex; gap: 10px;">
-                        <select name="currency" style="width: 80px;">
-                            <option value="USD">USD ($)</option>
-                            <option value="INR">INR (₹)</option>
-                        </select>
-                        <input type="number" step="0.01" name="original_price" required>
+        <form action="" method="POST" enctype="multipart/form-data" class="glass-card">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Product Image</label>
+                    <div class="upload-area" onclick="document.getElementById('image-input').click()">
+                        <div id="image-preview" style="display: none; margin-bottom: 15px;">
+                            <img id="preview-img"
+                                style="max-height: 200px; border-radius: 12px; margin: 0 auto; display: block;">
+                        </div>
+                        <div id="upload-prompt">
+                            <i data-lucide="image"
+                                style="width: 48px; height: 48px; color: var(--text-dim); margin-bottom: 10px;"></i>
+                            <p style="margin: 0; font-weight: 600;">Click to upload banner image</p>
+                            <p style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">Recommended: 800x450px
+                                (16:9)</p>
+                        </div>
+                        <input type="file" name="image" id="image-input" style="display: none;"
+                            onchange="previewImage(this)">
                     </div>
                 </div>
+
+                <div class="form-group full">
+                    <label>Product Name</label>
+                    <input type="text" name="name" placeholder="e.g. Netflix Premium UHD" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tagline (Short Highlight)</label>
+                    <input type="text" name="tagline" placeholder="e.g. 1-Year Shared Account">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Streaming">Streaming</option>
+                        <option value="Education">Education</option>
+                        <option value="Productivity">Productivity</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Design">Design</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>Description</label>
+                    <textarea name="description" rows="4" placeholder="Detailed product description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Currency</label>
+                    <select name="currency">
+                        <option value="USD">USD ($)</option>
+                        <option value="INR">INR (₹)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>License Type</label>
+                    <input type="text" name="license_type" placeholder="e.g. 1 Year Access">
+                </div>
+
+                <div class="form-group">
+                    <label>Original Price</label>
+                    <input type="number" step="0.01" name="original_price" required>
+                </div>
+
                 <div class="form-group">
                     <label>Discounted Price</label>
                     <input type="number" step="0.01" name="discounted_price" required>
                 </div>
-            </div>
 
-            <div class="grid">
                 <div class="form-group">
-                    <label>Category</label>
-                    <input type="text" name="category" required placeholder="e.g. CRM, Marketing">
+                    <label>Discount Percentage (%)</label>
+                    <input type="number" name="discount_percent" placeholder="e.g. 50">
                 </div>
-                <div class="form-group">
-                    <label>License Type</label>
-                    <input type="text" name="license_type" required placeholder="e.g. Lifetime Deal">
-                </div>
-            </div>
 
-            <div class="grid">
                 <div class="form-group">
-                    <label>Icon (Lucide name)</label>
-                    <select name="icon">
-                        <option value="users">Users</option>
-                        <option value="rocket">Rocket</option>
-                        <option value="database">Database</option>
-                        <option value="video">Video</option>
-                        <option value="mail">Mail</option>
-                        <option value="shield">Shield</option>
-                        <option value="zap">Zap</option>
-                    </select>
+                    <label>Rating (1-5)</label>
+                    <input type="number" step="0.1" name="rating" value="4.9" max="5">
                 </div>
+
                 <div class="form-group">
-                    <label>Theme Color (Hex)</label>
-                    <input type="color" name="color" value="#3B82F6" style="height: 42px; padding: 5px;">
+                    <label>Theme Color</label>
+                    <input type="color" name="color" value="#3DFE02" style="height: 50px; padding: 5px;">
                 </div>
+
                 <div class="form-group">
                     <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 30px;">
                         <input type="checkbox" name="is_active" checked style="width: auto;">
-                        Active (Visible on Store)
+                        Active & Published
                     </label>
                 </div>
-            </div>
 
-            <div class="grid">
-                <div class="form-group">
-                    <label>Rating (1-5)</label>
-                    <input type="number" step="0.1" name="rating" value="4.9" min="1" max="5">
+                <div class="form-group full">
+                    <label>Features (One per line)</label>
+                    <textarea name="features" rows="6" placeholder="Feature 1
+Feature 2
+Feature 3..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Reviews Count</label>
-                    <input type="number" name="reviews" value="0">
+
+                <div class="form-group full" style="padding-top: 20px;">
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; justify-content: center; padding: 16px;">
+                        Create Product Plan
+                    </button>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label>Features (One per line)</label>
-                <textarea name="features" required
-                    placeholder="Unlimited contacts&#10;Email tracking&#10;API access"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save Product</button>
+            <!-- Hidden inputs for backward compatibility if needed -->
+            <input type="hidden" name="icon" value="package">
         </form>
     </div>
+
+    <script>
+        lucide.createIcons();
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('preview-img').src = e.target.result;
+                    document.getElementById('image-preview').style.display = 'block';
+                    document.getElementById('upload-prompt').style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 
 </html>
