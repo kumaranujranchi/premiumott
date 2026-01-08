@@ -2275,3 +2275,81 @@ img {
     }
 }
 
+
+/* --- HOME PAGE SECTIONS FIX --- */
+
+.features-section {
+    padding: 100px 0;
+    margin-bottom: 40px;
+}
+
+.deals-section {
+    padding: 80px 0;
+}
+
+.home-page section:last-of-type {
+    margin-bottom: 80px;
+}
+
+
+/* --- HOME PAGE FEATURES DESIGN --- */
+
+.features-section .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.feature-card {
+    background: var(--bg-primary);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+    height: 100%;
+}
+
+.feature-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--bg-tertiary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+.feature-icon.highlight {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(61, 254, 2, 0.1);
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+.feature-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+    .features-section .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
