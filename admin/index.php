@@ -68,7 +68,7 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                 <div class="card-header-hound">
                     <h3 class="card-title-hound">Manage Products</h3>
                     <a href="add_product.php" class="btn-hound btn-hound-primary">
-                        <i data-lucide="plus" style="width: 16px;"></i> Add New
+                        <i data-lucide="plus" style="width: 16px;"></i> <span>Add New</span>
                     </a>
                 </div>
                 <div class="card-body-hound">
@@ -96,21 +96,24 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                                                 <?php else: ?>
                                                     <div
                                                         style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                                                        <i data-lucide="package" style="width: 20px; color: #555;"></i></div>
+                                                        <i data-lucide="package" style="width: 20px; color: #555;"></i>
+                                                    </div>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="font-weight: 700;"><?php echo htmlspecialchars($p['name']); ?></div>
                                             <div style="font-size: 12px; color: var(--text-dim);">
-                                                <?php echo htmlspecialchars($p['tagline']); ?></div>
+                                                <?php echo htmlspecialchars($p['tagline']); ?>
+                                            </div>
                                         </td>
                                         <td><span
                                                 style="font-size: 13px;"><?php echo htmlspecialchars($p['category']); ?></span>
                                         </td>
                                         <td>
                                             <div style="font-weight: 700;">
-                                                <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $p['discounted_price']; ?>
+                                                <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>
+                                                <?php echo $p['discounted_price']; ?>
                                             </div>
                                         </td>
                                         <td>

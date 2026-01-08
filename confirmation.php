@@ -110,7 +110,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
 
             <div class="confirmation-actions">
                 <a href="index.php" class="browse-more-btn">
-                    Browse More Deals <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    <span>Browse More Deals</span> <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
                 </a>
             </div>
 

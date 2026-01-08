@@ -18,11 +18,14 @@ $orders = $stmt->fetchAll();
 $stats = [
     'total_orders' => count($orders),
     'pending' => array_reduce($orders, function ($carry, $item) {
-        return $carry + (strtolower($item['status']) == 'pending' ? 1 : 0); }, 0),
+        return $carry + (strtolower($item['status']) == 'pending' ? 1 : 0);
+    }, 0),
     'processed' => array_reduce($orders, function ($carry, $item) {
-        return $carry + (strtolower($item['status']) == 'processed' ? 1 : 0); }, 0),
+        return $carry + (strtolower($item['status']) == 'processed' ? 1 : 0);
+    }, 0),
     'revenue' => array_reduce($orders, function ($carry, $item) {
-        return $carry + (strtolower($item['status']) == 'processed' ? $item['total_amount'] : 0); }, 0)
+        return $carry + (strtolower($item['status']) == 'processed' ? $item['total_amount'] : 0);
+    }, 0)
 ];
 ?>
 <!DOCTYPE html>
@@ -106,16 +109,20 @@ $stats = [
                                         </td>
                                         <td>
                                             <div style="font-weight: 700;">
-                                                <?php echo htmlspecialchars($o['product_name']); ?></div>
+                                                <?php echo htmlspecialchars($o['product_name']); ?>
+                                            </div>
                                             <div style="font-size: 11px; font-weight: 800; color: var(--primary);">
-                                                <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $o['total_amount']; ?>
+                                                <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>
+                                                <?php echo $o['total_amount']; ?>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="font-weight: 600;">
-                                                <?php echo htmlspecialchars($o['customer_name']); ?></div>
+                                                <?php echo htmlspecialchars($o['customer_name']); ?>
+                                            </div>
                                             <div style="font-size: 12px; color: var(--text-dim);">
-                                                <?php echo htmlspecialchars($o['customer_email']); ?></div>
+                                                <?php echo htmlspecialchars($o['customer_email']); ?>
+                                            </div>
                                         </td>
                                         <td>
                                             <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $o['customer_whatsapp']); ?>"
@@ -135,7 +142,7 @@ $stats = [
                                                 <a href="?id=<?php echo $o['id']; ?>&status=Processed"
                                                     class="btn-hound btn-hound-primary"
                                                     style="padding: 6px 12px; font-size: 11px;">
-                                                    Deliver
+                                                    <span>Deliver</span>
                                                 </a>
                                             <?php else: ?>
                                                 <i data-lucide="check-circle-2" style="color: #2E7D32; width: 18px;"></i>

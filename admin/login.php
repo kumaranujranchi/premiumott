@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <button type="submit" class="btn-hound btn-hound-primary"
                         style="width: 100%; justify-content: center; padding: 14px; font-size: 14px; letter-spacing: 0.5px;">
-                        Sign In to Dashboard
+                        <span>Sign In to Dashboard</span>
                     </button>
                 </form>
             </div>

@@ -75,8 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             rows="4"></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn">
-                        Submit Details
+                    <button type="submit" class="submit-btn"
+                        style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>Submit Details</span>
                     </button>
                 </form>
             </div>

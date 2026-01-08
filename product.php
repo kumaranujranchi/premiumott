@@ -9,7 +9,7 @@ if (!$product) {
     echo '<div class="container" style="padding: 60px 20px; text-align: center;">
             <h2>Product not found</h2>
             <a href="index.php" class="btn-primary" style="margin-top: 20px; display: inline-flex;">
-              Back to Home
+              <span>Back to Home</span>
             </a>
           </div>';
     include 'includes/footer.php';
@@ -159,7 +159,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
 
                     <button id="proceedBtn" class="proceed-btn disabled" disabled
                         onclick="window.location.href='details.php?id=<?php echo $product['id']; ?>'">
-                        Proceed to Payment
+                        <span>Proceed to Payment</span>
                     </button>
 
                     <p class="guarantee-text">

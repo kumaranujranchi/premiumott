@@ -38,10 +38,11 @@ $currencyMap = [
             </p>
             <div class="hero-actions">
                 <a href="#deals" class="btn-primary">
-                    Browse Deals <i data-lucide="arrow-right" style="width: 18px; height: 18px; margin-left: 8px;"></i>
+                    <span>Browse Deals</span> <i data-lucide="arrow-right"
+                        style="width: 18px; height: 18px; margin-left: 8px;"></i>
                 </a>
                 <a href="#how-it-works" class="btn-secondary">
-                    How it Works
+                    <span>How it Works</span>
                 </a>
             </div>
             <div class="trust-logos">
@@ -137,7 +138,7 @@ $currencyMap = [
                         </div>
 
                         <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
-                            View Deal <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                            <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
                     </div>
                 <?php endforeach; ?>

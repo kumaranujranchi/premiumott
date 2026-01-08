@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div style="margin-top: 20px;">
                             <button type="submit" class="btn-hound btn-hound-primary"
                                 style="width: 100%; justify-content: center; padding: 15px; font-size: 15px;">
-                                <i data-lucide="save" style="width: 18px;"></i> Save Product Changes
+                                <i data-lucide="save" style="width: 18px;"></i> <span>Save Product Changes</span>
                             </button>
                         </div>
                         <input type="hidden" name="icon" value="package">

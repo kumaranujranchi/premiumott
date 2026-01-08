@@ -191,7 +191,7 @@ Feature 3..."></textarea>
                         <div style="margin-top: 20px;">
                             <button type="submit" class="btn-hound btn-hound-primary"
                                 style="width: 100%; justify-content: center; padding: 15px; font-size: 15px;">
-                                <i data-lucide="plus-circle" style="width: 18px;"></i> Create Product Plan
+                                <i data-lucide="plus-circle" style="width: 18px;"></i> <span>Create Product Plan</span>
                             </button>
                         </div>
                         <input type="hidden" name="icon" value="package">
