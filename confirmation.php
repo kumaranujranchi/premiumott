@@ -6,11 +6,14 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $product = getProduct($pdo, $id);
 
 if (!$product) {
-    echo '<div class="container" style="padding: 60px 20px; text-align: center;">
-            <h2>Product not found</h2>
-            <a href="index.php" class="btn-primary" style="margin-top: 20px; display: inline-flex;">
-              Back to Home
-            </a>
+    echo '<div class="container" style="padding: 100px 20px; text-align: center;">
+            <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+                <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
+                <h2 style="margin-bottom: 20px;">Product not found</h2>
+                <a href="index.php" class="btn-primary">
+                  <span>Back to Home</span>
+                </a>
+            </div>
           </div>';
     include 'includes/footer.php';
     exit;
@@ -25,101 +28,98 @@ $currencyMap = [
 $symbol = $currencyMap[$product['currency'] ?? 'USD'];
 ?>
 
-<div class="confirmation-page">
-    <div class="container">
-        <div class="confirmation-content">
-            <div class="success-illustration">
-                <div class="success-circle">
-                    <i data-lucide="check-circle-2" style="width: 64px; height: 64px;"></i>
+<div class="confirmation-page-premium">
+    <div class="container small-container">
+        <!-- Progress Steps -->
+        <div class="order-progress">
+            <div class="progress-step completed">
+                <div class="step-dot"><i data-lucide="check"></i></div>
+                <span>Selection</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step completed">
+                <div class="step-dot"><i data-lucide="check"></i></div>
+                <span>Your Details</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <div class="step-dot"><i data-lucide="package"></i></div>
+                <span>Access</span>
+            </div>
+        </div>
+
+        <div class="confirmation-hero">
+            <div class="conf-icon-box">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p>Your order for <strong><?php echo $product['name']; ?></strong> has been received and is now being
+                processed.</p>
+        </div>
+
+        <div class="order-summary-card">
+            <div class="summary-header">
+                <div class="order-id-box">
+                    <span class="label">Order Number</span>
+                    <span class="value"><?php echo $orderNumber; ?></span>
+                </div>
+                <div class="status-pill-hound">
+                    <span class="pulse-dot"></span>
+                    Processing
                 </div>
             </div>
 
-            <h1 class="confirmation-title">Order Confirmed!</h1>
-            <p class="confirmation-subtitle">
-                Our sales team will contact you shortly to deliver your product.
-            </p>
-
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <span class="order-label">Order Number</span>
-                        <span class="order-number">
-                            <?php echo $orderNumber; ?>
-                        </span>
+            <div class="summary-body">
+                <div class="product-info-row">
+                    <div class="prod-details">
+                        <h3><?php echo $product['name']; ?></h3>
+                        <p><?php echo $product['license_type']; ?></p>
                     </div>
-                    <span class="order-status">
-                        <i data-lucide="clock" style="width: 16px; height: 16px;"></i>
-                        Processing
-                    </span>
-                </div>
-
-                <div class="order-product">
-                    <div class="order-product-info">
-                        <h3>
-                            <?php echo $product['name']; ?>
-                        </h3>
-                        <span>
-                            <?php echo $product['license_type']; ?>
-                        </span>
+                    <div class="prod-price">
+                        <?php echo $symbol; ?><?php echo $product['discounted_price']; ?>
                     </div>
-                    <span class="order-price"><?php echo $symbol; ?>
-                        <?php echo $product['discounted_price']; ?>
-                    </span>
                 </div>
-
-                <div class="order-total">
-                    <span>Total Paid</span>
-                    <span><?php echo $symbol; ?>
-                        <?php echo $product['discounted_price']; ?>
-                    </span>
+                <div class="total-row">
+                    <span>Total Amount Paid</span>
+                    <strong><?php echo $symbol; ?><?php echo $product['discounted_price']; ?></strong>
                 </div>
             </div>
+        </div>
 
-            <div class="next-steps">
-                <h3>What Happens Next?</h3>
-                <div class="steps-list">
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i data-lucide="clock" style="width: 20px; height: 20px;"></i>
-                        </div>
-                        <div class="step-content">
-                            <strong>Verification (1-2 hours)</strong>
-                            <p>We verify your payment and prepare your license</p>
-                        </div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i>
-                        </div>
-                        <div class="step-content">
-                            <strong>Contact (Within 24 hours)</strong>
-                            <p>Our sales team will reach out via WhatsApp or email</p>
-                        </div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i data-lucide="mail" style="width: 20px; height: 20px;"></i>
-                        </div>
-                        <div class="step-content">
-                            <strong>Delivery</strong>
-                            <p>You'll receive your license credentials and setup guide</p>
-                        </div>
-                    </div>
+        <div class="next-steps-premium">
+            <h2>Next Steps</h2>
+            <div class="steps-grid-hound">
+                <div class="step-card-hound">
+                    <div class="step-icon-white"><i data-lucide="mail-check"></i></div>
+                    <h3>Verification</h3>
+                    <p>We'll verify your payment and details within 1-2 hours.</p>
+                </div>
+                <div class="step-card-hound">
+                    <div class="step-icon-white"><i data-lucide="message-circle"></i></div>
+                    <h3>Direct Contact</h3>
+                    <p>Our sales team will reach out via WhatsApp for activation.</p>
+                </div>
+                <div class="step-card-hound">
+                    <div class="step-icon-white"><i data-lucide="key"></i></div>
+                    <h3>Delivery</h3>
+                    <p>Receive your unique credentials and setup guide instantly after contact.</p>
                 </div>
             </div>
+        </div>
 
-            <div class="confirmation-actions">
-                <a href="index.php" class="browse-more-btn">
-                    <span>Browse More Deals</span> <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-                </a>
-            </div>
-
-            <p class="support-note">
-                Have questions? Contact us at <a
-                    href="mailto:support@premiumottstore.com">support@premiumottstore.com</a>
-            </p>
+        <div class="confirmation-footer">
+            <a href="index.php" class="btn-primary browse-btn-lg">
+                <span>Browse More Deals</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+            <p class="support-text">Questions about your order? <a href="mailto:support@premiumottstore.com">Contact
+                    Support</a></p>
         </div>
     </div>
 </div>
+
+<script>
+    lucide.createIcons();
+</script>
 
 <?php include 'includes/footer.php'; ?>

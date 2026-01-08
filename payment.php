@@ -6,138 +6,148 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $product = getProduct($pdo, $id);
 
 if (!$product) {
-    echo '<div class="container" style="padding: 60px 20px; text-align: center;">
-            <h2>Product not found</h2>
-            <a href="index.php" class="btn-primary" style="margin-top: 20px; display: inline-flex;">
-              Back to Home
-            </a>
+    echo '<div class="container" style="padding: 100px 20px; text-align: center;">
+            <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+                <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
+                <h2 style="margin-bottom: 20px;">Product not found</h2>
+                <a href="index.php" class="btn-primary">
+                  <span>Back to Home</span>
+                </a>
+            </div>
           </div>';
     include 'includes/footer.php';
     exit;
 }
+
+$currencyMap = [
+    'USD' => '$',
+    'INR' => '₹'
+];
+$symbol = $currencyMap[$product['currency'] ?? 'USD'];
 ?>
 
-<div class="payment-page">
+<div class="payment-page-premium">
     <div class="container">
-        <a href="product.php?id=<?php echo $id; ?>" class="back-link">
-            <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
-            Back to product
-        </a>
+        <!-- Progress Steps -->
+        <div class="order-progress">
+            <div class="progress-step completed">
+                <div class="step-dot"><i data-lucide="check"></i></div>
+                <span>Selection</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <div class="step-dot">2</div>
+                <span>Payment</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <div class="step-dot">3</div>
+                <span>Details & Access</span>
+            </div>
+        </div>
 
-        <div class="payment-grid">
-            <div class="payment-form-section">
-                <h1 class="payment-title">Complete Your Purchase</h1>
+        <div class="payment-layout-hound">
+            <!-- Left: Payment Form -->
+            <div class="payment-form-card">
+                <div class="card-header-premium">
+                    <i data-lucide="lock" class="header-icon"></i>
+                    <h2>Secure Checkout</h2>
+                </div>
 
-                <form class="payment-form" id="paymentForm" onsubmit="return handlePayment(event)">
-                    <h3>Payment Details</h3>
-
-                    <div class="form-group">
-                        <label>Cardholder Name</label>
-                        <input type="text" name="cardholderName" id="cardholderName" placeholder="John Smith"
-                            required />
-                        <span class="error-msg" id="err-cardholderName"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Card Number</label>
-                        <div class="card-input-wrapper">
-                            <input type="text" name="cardNumber" id="cardNumber" placeholder="1234 5678 9012 3456"
-                                required />
-                            <i data-lucide="credit-card" style="width: 20px; height: 20px;" class="card-icon"></i>
+                <form class="checkout-form-premium"
+                    onsubmit="event.preventDefault(); window.location.href='details.php?id=<?php echo $id; ?>';">
+                    <div class="form-section-hound">
+                        <label><i data-lucide="user"></i> Cardholder Name</label>
+                        <div class="premium-input-box">
+                            <input type="text" placeholder="John Smith" required />
                         </div>
-                        <span class="error-msg" id="err-cardNumber"></span>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
+                    <div class="form-section-hound">
+                        <label><i data-lucide="credit-card"></i> Card Number</label>
+                        <div class="premium-input-box">
+                            <input type="text" placeholder="0000 0000 0000 0000" required />
+                            <div class="card-brands">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
+                                    alt="Visa">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                                    alt="Mastercard">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row-hound">
+                        <div class="form-section-hound">
                             <label>Expiry Date</label>
-                            <input type="text" name="expiry" id="expiry" placeholder="MM/YY" required />
-                            <span class="error-msg" id="err-expiry"></span>
+                            <div class="premium-input-box">
+                                <input type="text" placeholder="MM/YY" required />
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>CVV</label>
-                            <input type="text" name="cvv" id="cvv" placeholder="123" required />
-                            <span class="error-msg" id="err-cvv"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" name="email" id="email" placeholder="you@example.com" required />
-                        <span class="error-msg" id="err-email"></span>
-                    </div>
-
-                    <div class="security-badges">
-                        <div class="badge">
-                            <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
-                            256-bit SSL
-                        </div>
-                        <div class="badge">
-                            <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
-                            Secure Payment
+                        <div class="form-section-hound">
+                            <label>CVC / CVV</label>
+                            <div class="premium-input-box">
+                                <input type="text" placeholder="123" required />
+                            </div>
                         </div>
                     </div>
 
-                    <div class="delivery-reminder">
-                        <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
-                        <div>
-                            <strong>Manual Delivery Notice</strong>
-                            <p>This product will be delivered manually by our sales team within 24-48 hours after
-                                payment verification.</p>
+                    <div class="payment-badges-row">
+                        <div class="secure-badge-hound">
+                            <i data-lucide="shield-check"></i>
+                            <span>256-bit SSL Encrypted</span>
+                        </div>
+                        <div class="secure-badge-hound">
+                            <i data-lucide="lock"></i>
+                            <span>Secure Payment Gateway</span>
                         </div>
                     </div>
 
-                    <button type="submit" class="pay-btn">
-                        Pay $
-                        <?php echo $product['discounted_price']; ?>
+                    <button type="submit" class="submit-pay-btn">
+                        <span>Pay <?php echo $symbol; ?><?php echo $product['discounted_price']; ?> Now</span>
+                        <i data-lucide="chevron-right"></i>
                     </button>
+
+                    <p class="safe-note">By clicking, you agree to our Terms and 30-day money-back guarantee.</p>
                 </form>
             </div>
 
-            <div class="order-summary">
-                <h3>Order Summary</h3>
+            <!-- Right: Simple Summary -->
+            <div class="order-sidebar-hound">
+                <div class="summary-card-hound">
+                    <h3>Order Summary</h3>
 
-                <div class="summary-product">
-                    <div class="summary-product-info">
-                        <h4>
-                            <?php echo $product['name']; ?>
-                        </h4>
-                        <span class="license-tag">
-                            <?php echo $product['license_type']; ?>
-                        </span>
+                    <div class="summary-product-item">
+                        <div class="p-img-thumb" style="background: <?php echo $product['color']; ?>15">
+                            <i data-lucide="package" style="color: <?php echo $product['color']; ?>"></i>
+                        </div>
+                        <div class="p-info-thumb">
+                            <strong><?php echo $product['name']; ?></strong>
+                            <span><?php echo $product['license_type']; ?></span>
+                        </div>
+                    </div>
+
+                    <div class="calculation-hound">
+                        <div class="calc-row">
+                            <span>Subtotal</span>
+                            <span><?php echo $symbol; ?><?php echo $product['original_price']; ?></span>
+                        </div>
+                        <div class="calc-row discount">
+                            <span>Discount (<?php echo $product['discount_percent']; ?>% off)</span>
+                            <span>-<?php echo $symbol; ?><?php echo $product['original_price'] - $product['discounted_price']; ?></span>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="calc-row total">
+                            <span>Total</span>
+                            <strong><?php echo $symbol; ?><?php echo $product['discounted_price']; ?></strong>
+                        </div>
                     </div>
                 </div>
 
-                <div class="summary-line">
-                    <span>Original Price</span>
-                    <span class="original-price">$
-                        <?php echo $product['original_price']; ?>
-                    </span>
-                </div>
-
-                <div class="summary-line discount">
-                    <span>Discount (
-                        <?php echo $product['discount_percent']; ?>% off)
-                    </span>
-                    <span>-$
-                        <?php echo $product['original_price'] - $product['discounted_price']; ?>
-                    </span>
-                </div>
-
-                <div class="summary-divider"></div>
-
-                <div class="summary-line total">
-                    <span>Total</span>
-                    <span>$
-                        <?php echo $product['discounted_price']; ?>
-                    </span>
-                </div>
-
-                <div class="guarantee-box">
-                    <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
+                <div class="guarantee-sidebar-card">
+                    <i data-lucide="shield"></i>
                     <div>
-                        <strong>30-Day Money Back Guarantee</strong>
-                        <p>Not satisfied? Get a full refund, no questions asked.</p>
+                        <strong>Buyer Protection</strong>
+                        <p>30 Days money back guarantee for peace of mind.</p>
                     </div>
                 </div>
             </div>
@@ -146,12 +156,7 @@ if (!$product) {
 </div>
 
 <script>
-    function handlePayment(e) {
-        e.preventDefault();
-        // Simple client side simulation
-        window.location.href = 'details.php?id=<?php echo $id; ?>';
-        return false;
-    }
+    lucide.createIcons();
 </script>
 
 <?php include 'includes/footer.php'; ?>
