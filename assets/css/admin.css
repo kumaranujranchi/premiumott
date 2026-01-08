@@ -16,6 +16,9 @@
     --stat-orange: #FFB300;
     --stat-green: #2E7D32;
     --stat-blue: #1E88E5;
+    /* Hover effect colors */
+    --hover-secondary: #D32F2F;
+    --hover-tertiary: #B71C1C;
 }
 
 body {
@@ -273,6 +276,7 @@ tr:hover td {
 
 /* Buttons */
 .btn-hound {
+    position: relative;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 13px;
@@ -283,7 +287,44 @@ tr:hover td {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    overflow: hidden;
+    z-index: 1;
+    color: #fff;
+    transition: all 0.3s;
 }
+
+.btn-hound i, .btn-hound span, .btn-hound div {
+    position: relative;
+    z-index: 3;
+}
+
+.btn-hound::before, .btn-hound::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+}
+
+.btn-hound::before {
+    background: var(--hover-secondary);
+    transition: 0.6s ease-in;
+    transition-delay: .1s;
+}
+
+.btn-hound::after {
+    background: var(--hover-tertiary);
+    transition: 0.8s ease;
+    transition-delay: .4s;
+}
+
+.btn-hound:hover::before, .btn-hound:hover::after {
+    transform: translate(-50%, -50%) scale(310);
+}
+
 
 .btn-hound-primary {
     background: var(--stat-red);
