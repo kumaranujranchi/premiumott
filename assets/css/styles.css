@@ -2353,3 +2353,119 @@ img {
     }
 }
 
+
+/* --- MOBILE HEADER & TRUST BAR FIX --- */
+
+@media (max-width: 768px) {
+    .trust-bar {
+        padding: 6px 0;
+        font-size: 11px;
+    }
+    
+    .trust-bar .container {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        justify-content: flex-start;
+        gap: 24px;
+        padding: 0 15px;
+        scrollbar-width: none; /* Firefox */
+    }
+    
+    .trust-bar .container::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    
+    .trust-bar span {
+        flex-shrink: 0;
+    }
+
+    .header-content {
+        padding: 12px 16px;
+    }
+
+    .logo img {
+        height: 45px;
+    }
+
+    .mobile-menu-btn {
+        display: block !important;
+        margin-left: 10px;
+    }
+
+    .nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: #000;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        border-left: 1px solid var(--border);
+    }
+
+    .nav.nav-open {
+        right: 0;
+        box-shadow: -20px 0 60px rgba(0,0,0,0.8);
+    }
+
+    .nav-link {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .header-actions .support-link {
+        display: none;
+    }
+}
+
+
+/* --- MOBILE MENU REFINEMENT --- */
+
+@media (max-width: 768px) {
+    .nav {
+        padding-top: 100px;
+        justify-content: flex-start;
+    }
+
+    .nav-link.mobile-only {
+        display: block;
+    }
+
+    /* Fixed position for mobile actions to avoid wrap */
+    .header-actions {
+        gap: 12px;
+    }
+
+    .cart-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .mobile-menu-btn {
+        width: 40px;
+        height: 40px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        z-index: 1001; /* Above nav */
+    }
+
+    /* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+.mobile-only {
+    display: none;
+}
+

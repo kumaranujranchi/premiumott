@@ -35,6 +35,7 @@
                 <a href="index.php" class="nav-link">Software Deals</a>
                 <a href="index.php#deals" class="nav-link">Lifetime Licenses</a>
                 <a href="index.php#how-it-works" class="nav-link">How it Works</a>
+                <a href="#" class="nav-link mobile-only">Support</a>
             </nav>
 
             <div class="header-actions">

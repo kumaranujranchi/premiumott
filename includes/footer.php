@@ -96,6 +96,7 @@
     if (mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', () => {
             mainNav.classList.toggle('nav-open');
+            document.body.classList.toggle('menu-open');
             const isOpen = mainNav.classList.contains('nav-open');
             menuIcon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
             lucide.createIcons();
