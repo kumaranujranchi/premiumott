@@ -2,7 +2,7 @@
 include 'includes/db.php';
 include 'includes/header.php';
 
-$products = getAllProducts($pdo);
+$products = getAllProducts($pdo, true);
 
 $iconMap = [
     'users' => 'users',

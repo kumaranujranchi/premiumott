@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
+    $is_active = isset($_POST['is_active']) ? 1 : 0;
     $currency = $_POST['currency'] ?: 'USD';
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
@@ -38,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image, currency, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $is_active]);
 
         $productId = $pdo->lastInsertId();
 
@@ -234,6 +235,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label>Theme Color (Hex)</label>
                     <input type="color" name="color" value="#3B82F6" style="height: 42px; padding: 5px;">
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 30px;">
+                        <input type="checkbox" name="is_active" checked style="width: auto;">
+                        Active (Visible on Store)
+                    </label>
                 </div>
             </div>
 

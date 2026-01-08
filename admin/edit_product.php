@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
+    $is_active = isset($_POST['is_active']) ? 1 : 0;
     $currency = $_POST['currency'];
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
@@ -53,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=?, currency=? WHERE id=?");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $id]);
+        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=?, currency=?, is_active=? WHERE id=?");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $is_active, $id]);
 
         // Update features: delete old ones and insert new ones
         $pdo->prepare("DELETE FROM product_features WHERE product_id = ?")->execute([$id]);
@@ -271,6 +272,13 @@ $features_text = implode("\n", $product['features']);
                     <label>Theme Color (Hex)</label>
                     <input type="color" name="color" value="<?php echo $product['color']; ?>"
                         style="height: 42px; padding: 5px;">
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 30px;">
+                        <input type="checkbox" name="is_active" <?php echo $product['is_active'] ? 'checked' : ''; ?>
+                            style="width: auto;">
+                        Active (Visible on Store)
+                    </label>
                 </div>
             </div>
 

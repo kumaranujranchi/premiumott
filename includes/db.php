@@ -30,9 +30,14 @@ function getProduct($pdo, $id)
 }
 
 // Function to get all products
-function getAllProducts($pdo)
+function getAllProducts($pdo, $onlyActive = false)
 {
-    $stmt = $pdo->query("SELECT * FROM products ORDER BY created_at DESC");
+    $sql = "SELECT * FROM products";
+    if ($onlyActive) {
+        $sql .= " WHERE is_active = 1";
+    }
+    $sql .= " ORDER BY created_at DESC";
+    $stmt = $pdo->query($sql);
     $products = $stmt->fetchAll();
 
     foreach ($products as &$product) {

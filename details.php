@@ -24,11 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $requirements = $_POST['requirements'];
 
     // Save to database
-    $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, total_amount) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$id, $name, $email, $product['discounted_price']]);
+    $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, customer_whatsapp, requirements, total_amount) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$id, $name, $email, $whatsapp, $requirements, $product['discounted_price']]);
 
-    // In a real app, you'd also save the whatsapp and requirements in a customer_details table
-    // For now, we'll just redirect to confirmation
     header("Location: confirmation.php?id=" . $id);
     exit;
 }

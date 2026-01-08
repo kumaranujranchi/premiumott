@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS products (
     color VARCHAR(20),
     image VARCHAR(255),
     currency VARCHAR(10) DEFAULT 'USD',
+    is_active TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -29,7 +30,10 @@ CREATE TABLE IF NOT EXISTS orders (
     product_id INT,
     customer_name VARCHAR(255),
     customer_email VARCHAR(255),
+    customer_whatsapp VARCHAR(20),
+    requirements TEXT,
     total_amount DECIMAL(10, 2),
+    status ENUM('Pending', 'Processed', 'Cancelled') DEFAULT 'Pending',
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );

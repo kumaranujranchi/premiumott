@@ -124,9 +124,15 @@ $products = getAllProducts($pdo);
     <div class="container">
         <div class="header">
             <h1>Premium OTT Store Admin</h1>
-            <a href="add_product.php" class="btn btn-primary">
-                <i data-lucide="plus" style="width: 18px; height: 18px;"></i> Add New Product
-            </a>
+            <div class="actions">
+                <a href="orders.php" class="btn btn-secondary"
+                    style="border: 1px solid var(--border); box-shadow: none;">
+                    <i data-lucide="bar-chart-2" style="width: 18px; height: 18px;"></i> Orders & Analytics
+                </a>
+                <a href="add_product.php" class="btn btn-primary">
+                    <i data-lucide="plus" style="width: 18px; height: 18px;"></i> Add New Product
+                </a>
+            </div>
         </div>
 
         <div class="card">
@@ -136,6 +142,7 @@ $products = getAllProducts($pdo);
                         <th>Product</th>
                         <th>Category</th>
                         <th>Price</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -168,6 +175,12 @@ $products = getAllProducts($pdo);
                                 <div style="font-size: 12px; color: var(--text-light); text-decoration: line-through;">$
                                     <?php echo $p['original_price']; ?>
                                 </div>
+                            </td>
+                            <td>
+                                <span
+                                    style="padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; background: <?php echo $p['is_active'] ? '#D1FAE5' : '#FEE2E2'; ?>; color: <?php echo $p['is_active'] ? '#065F46' : '#B91C1C'; ?>;">
+                                    <?php echo $p['is_active'] ? 'ACTIVE' : 'INACTIVE'; ?>
+                                </span>
                             </td>
                             <td class="actions">
                                 <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="btn btn-edit"
