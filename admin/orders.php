@@ -11,15 +11,19 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
     exit;
 }
 
-$stats = [
-    'total_orders' => $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn(),
-    'pending' => $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) = 'pending'")->fetchColumn(),
-    'processed' => $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) = 'processed'")->fetchColumn(),
-    'revenue' => $pdo->query("SELECT SUM(total_amount) FROM orders WHERE LOWER(status) = 'processed'")->fetchColumn() ?: 0
-];
-
 $stmt = $pdo->query("SELECT o.*, p.name as product_name, p.currency FROM orders o JOIN products p ON o.product_id = p.id ORDER BY o.order_date DESC");
 $orders = $stmt->fetchAll();
+
+// Analytics
+$stats = [
+    'total_orders' => count($orders),
+    'pending' => array_reduce($orders, function ($carry, $item) {
+        return $carry + (strtolower($item['status']) == 'pending' ? 1 : 0); }, 0),
+    'processed' => array_reduce($orders, function ($carry, $item) {
+        return $carry + (strtolower($item['status']) == 'processed' ? 1 : 0); }, 0),
+    'revenue' => array_reduce($orders, function ($carry, $item) {
+        return $carry + (strtolower($item['status']) == 'processed' ? $item['total_amount'] : 0); }, 0)
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,128 +31,126 @@ $orders = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders & Analytics - Premium OTT Store Admin</title>
+    <title>Orders - Premium OTT Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
-    <div class="admin-container">
-        <header class="admin-header">
-            <div>
-                <h1>Sales & Analytics</h1>
-                <p style="color: var(--text-dim); margin-top: 4px; font-size: 14px;">Track your performance and manage
-                    customer deliveries</p>
+    <?php include 'includes/sidebar.php'; ?>
+
+    <main class="main-content">
+        <?php include 'includes/top_nav.php'; ?>
+
+        <div class="content-body">
+            <div class="stats-grid-hound">
+                <div class="hound-stat-card card-red">
+                    <div class="stat-info">
+                        <div class="stat-value"><?php echo $stats['total_orders']; ?></div>
+                        <div class="stat-label">Total Visits</div>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="users" style="width: 32px; height: 32px;"></i></div>
+                </div>
+                <div class="hound-stat-card card-orange">
+                    <div class="stat-info">
+                        <div class="stat-value"><?php echo $stats['pending']; ?></div>
+                        <div class="stat-label">Bounce Rate</div>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="refresh-cw" style="width: 32px; height: 32px;"></i></div>
+                </div>
+                <div class="hound-stat-card card-green">
+                    <div class="stat-info">
+                        <div class="stat-value"><?php echo $stats['processed']; ?></div>
+                        <div class="stat-label">Conversions</div>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="check-square" style="width: 32px; height: 32px;"></i></div>
+                </div>
+                <div class="hound-stat-card card-blue">
+                    <div class="stat-info">
+                        <div class="stat-value">₹<?php echo number_format($stats['revenue'], 0); ?></div>
+                        <div class="stat-label">Revenue</div>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="trending-up" style="width: 32px; height: 32px;"></i></div>
+                </div>
             </div>
 
-            <div class="nav-pills">
-                <a href="index.php" class="nav-pill">Products</a>
-                <a href="orders.php" class="nav-pill active">Orders</a>
-            </div>
-
-            <a href="index.php" class="btn btn-outline">
-                <i data-lucide="arrow-left"></i> Back to Products
-            </a>
-        </header>
-
-        <div class="stats-row">
-            <div class="stat-item">
-                <span class="stat-label">Total Volume</span>
-                <div class="stat-value"><?php echo $stats['total_orders']; ?></div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Pending Delivery</span>
-                <div class="stat-value" style="color: #F59E0B;"><?php echo $stats['pending']; ?></div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Success Rate</span>
-                <div class="stat-value" style="color: #10B981;"><?php echo $stats['processed']; ?></div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Total Revenue</span>
-                <div class="stat-value" style="color: var(--primary);">
-                    ₹<?php echo number_format($stats['revenue'], 0); ?></div>
+            <div class="hound-card">
+                <div class="card-header-hound">
+                    <h3 class="card-title-hound">Recent Orders</h3>
+                </div>
+                <div class="card-body-hound">
+                    <div style="overflow-x: auto;">
+                        <table class="hound-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th>WhatsApp</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (empty($orders)): ?>
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-dim);">
+                                            No orders found</td>
+                                    </tr>
+                                <?php endif; ?>
+                                <?php foreach ($orders as $o): ?>
+                                    <tr>
+                                        <td style="font-size: 13px; color: var(--text-dim);">
+                                            <?php echo date('d M, Y', strtotime($o['order_date'])); ?>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 700;">
+                                                <?php echo htmlspecialchars($o['product_name']); ?></div>
+                                            <div style="font-size: 11px; font-weight: 800; color: var(--primary);">
+                                                <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $o['total_amount']; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="font-weight: 600;">
+                                                <?php echo htmlspecialchars($o['customer_name']); ?></div>
+                                            <div style="font-size: 12px; color: var(--text-dim);">
+                                                <?php echo htmlspecialchars($o['customer_email']); ?></div>
+                                        </td>
+                                        <td>
+                                            <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $o['customer_whatsapp']); ?>"
+                                                target="_blank"
+                                                style="color: #25D366; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                                                <i data-lucide="message-circle" style="width: 14px;"></i> Chat
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span
+                                                style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: <?php echo strtolower($o['status']) == 'pending' ? '#FFB300' : '#2E7D32'; ?>;">
+                                                <?php echo $o['status']; ?>
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <?php if (strtolower($o['status']) == 'pending'): ?>
+                                                <a href="?id=<?php echo $o['id']; ?>&status=Processed"
+                                                    class="btn-hound btn-hound-primary"
+                                                    style="padding: 6px 12px; font-size: 11px;">
+                                                    Deliver
+                                                </a>
+                                            <?php else: ?>
+                                                <i data-lucide="check-circle-2" style="color: #2E7D32; width: 18px;"></i>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+    </main>
 
-        <div class="glass-card">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Product</th>
-                            <th>Customer Details</th>
-                            <th>WhatsApp</th>
-                            <th>Status</th>
-                            <th style="text-align: right;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($orders)): ?>
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 60px; color: var(--text-dim);">No orders
-                                    found yet</td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php foreach ($orders as $o): ?>
-                            <tr>
-                                <td style="font-size: 13px; color: var(--text-dim);">
-                                    <?php echo date('d M, Y', strtotime($o['order_date'])); ?><br>
-                                    <small><?php echo date('H:i', strtotime($o['order_date'])); ?></small>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 700; color: #fff;">
-                                        <?php echo htmlspecialchars($o['product_name']); ?>
-                                    </div>
-                                    <div
-                                        style="font-size: 11px; color: var(--primary); font-weight: 800; text-transform: uppercase;">
-                                        Paid:
-                                        <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>     <?php echo $o['total_amount']; ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600;">
-                                        <?php echo htmlspecialchars($o['customer_name'] ?: 'Guest User'); ?>
-                                    </div>
-                                    <div style="font-size: 12px; color: var(--text-dim);">
-                                        <?php echo htmlspecialchars($o['customer_email']); ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php if ($o['customer_whatsapp']): ?>
-                                        <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $o['customer_whatsapp']); ?>"
-                                            target="_blank" class="btn btn-outline"
-                                            style="padding: 6px 12px; font-size: 12px; border-color: rgba(37, 211, 102, 0.3); color: #25D366;">
-                                            <i data-lucide="message-circle" style="width: 14px;"></i> Chat
-                                        </a>
-                                    <?php else: ?>
-                                        <span style="color: var(--text-dim);">N/A</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="status-pill status-<?php echo strtolower($o['status']); ?>">
-                                        <?php echo $o['status']; ?>
-                                    </span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <?php if (strtolower($o['status']) == 'pending'): ?>
-                                        <a href="?id=<?php echo $o['id']; ?>&status=Processed" class="btn btn-primary"
-                                            style="padding: 8px 16px; font-size: 12px;">
-                                            Deliver
-                                        </a>
-                                    <?php else: ?>
-                                        <i data-lucide="check-circle-2" style="color: var(--primary); width: 20px;"></i>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
     <script>lucide.createIcons();</script>
 </body>
 
