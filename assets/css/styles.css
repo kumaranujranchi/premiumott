@@ -2575,3 +2575,20 @@ img {
     }
 }
 
+
+/* --- WHATSAPP MOBILE BUTTON SIZE FIX --- */
+
+@media (max-width: 768px) {
+    .whatsapp-btn-premium {
+        width: 54px;
+        height: 54px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .whatsapp-btn-premium i {
+        width: 26px;
+        height: 26px;
+    }
+}
+
