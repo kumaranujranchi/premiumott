@@ -48,7 +48,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                 <?php if (!empty($product['image'])): ?>
                     <div class="product-banner-lg">
                         <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
-                            style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border);">
+                            class="banner-img">
                     </div>
                 <?php else: ?>
                     <div class="product-hero-icon" style="background: <?php echo $product['color']; ?>15;">
