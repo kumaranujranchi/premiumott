@@ -2592,3 +2592,25 @@ img {
     }
 }
 
+
+/* --- MOBILE LOGO AND HEADER REFINEMENT --- */
+
+@media (max-width: 768px) {
+    .logo img {
+        height: 38px !important; /* Smaller logo for mobile only */
+    }
+
+    .header-content {
+        padding: 10px 16px; /* Slightly tighter vertical padding */
+    }
+
+    .trust-bar {
+        padding: 4px 0; /* Tighter trust bar */
+    }
+
+    .trust-bar span i {
+        width: 12px;
+        height: 12px;
+    }
+}
+
