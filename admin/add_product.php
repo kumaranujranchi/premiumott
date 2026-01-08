@@ -16,11 +16,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $color = $_POST['color'];
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
+    $image = "";
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $targetDir = "../uploads/products/";
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+        $fileName = time() . '_' . basename($_FILES["image"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'webp');
+        if (in_array(strtolower($fileType), $allowTypes)) {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
+                $image = "uploads/products/" . $fileName;
+            }
+        }
+    }
+
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image]);
 
         $productId = $pdo->lastInsertId();
 
@@ -153,7 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form action="" method="POST" class="card">
+        <form action="" method="POST" class="card" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file" name="image" accept="image/*">
+            </div>
             <div class="form-group">
                 <label>Product Name</label>
                 <input type="text" name="name" required placeholder="e.g. Nexus CRM">

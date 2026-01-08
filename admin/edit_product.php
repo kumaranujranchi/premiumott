@@ -27,11 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $color = $_POST['color'];
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
+    $image = $product['image'];
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $targetDir = "../uploads/products/";
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+        $fileName = time() . '_' . basename($_FILES["image"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+        $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'webp');
+        if (in_array(strtolower($fileType), $allowTypes)) {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFilePath)) {
+                // Delete old image if exists
+                if (!empty($product['image']) && file_exists("../" . $product['image'])) {
+                    unlink("../" . $product['image']);
+                }
+                $image = "uploads/products/" . $fileName;
+            }
+        }
+    }
+
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=? WHERE id=?");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $id]);
+        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=? WHERE id=?");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $id]);
 
         // Update features: delete old ones and insert new ones
         $pdo->prepare("DELETE FROM product_features WHERE product_id = ?")->execute([$id]);
@@ -169,7 +191,17 @@ $features_text = implode("\n", $product['features']);
             </div>
         <?php endif; ?>
 
-        <form action="" method="POST" class="card">
+        <form action="" method="POST" class="card" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Product Image</label>
+                <?php if (!empty($product['image'])): ?>
+                    <div style="margin-bottom: 10px;">
+                        <img src="../<?php echo $product['image']; ?>" alt="Current Image"
+                            style="max-width: 200px; border-radius: 8px; border: 1px solid var(--border);">
+                    </div>
+                <?php endif; ?>
+                <input type="file" name="image" accept="image/*">
+            </div>
             <div class="form-group">
                 <label>Product Name</label>
                 <input type="text" name="name" required value="<?php echo htmlspecialchars($product['name']); ?>">

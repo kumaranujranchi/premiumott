@@ -26,7 +26,7 @@
     <header class="header">
         <div class="container header-content">
             <a href="index.php" class="logo">
-                <img src="assets/img/logo.png" alt="Premium OTT Store" style="height: 45px; width: auto;">
+                <img src="assets/img/logo.png" alt="Premium OTT Store" style="height: 60px; width: auto;">
             </a>
 
             <nav class="nav" id="mainNav">

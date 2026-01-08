@@ -39,10 +39,17 @@ $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users'
 
         <div class="product-detail-grid">
             <div class="product-main">
-                <div class="product-hero-icon" style="background: <?php echo $product['color']; ?>15;">
-                    <i data-lucide="<?php echo $icon; ?>"
-                        style="width: 48px; height: 48px; color: <?php echo $product['color']; ?>;"></i>
-                </div>
+                <?php if (!empty($product['image'])): ?>
+                    <div class="product-banner-lg">
+                        <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                            style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border);">
+                    </div>
+                <?php else: ?>
+                    <div class="product-hero-icon" style="background: <?php echo $product['color']; ?>15;">
+                        <i data-lucide="<?php echo $icon; ?>"
+                            style="width: 48px; height: 48px; color: <?php echo $product['color']; ?>;"></i>
+                    </div>
+                <?php endif; ?>
 
                 <div class="product-badges">
                     <span class="discount-badge-lg">

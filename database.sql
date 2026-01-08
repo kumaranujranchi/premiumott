@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS products (
     license_type VARCHAR(100),
     icon VARCHAR(50),
     color VARCHAR(20),
+    image VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

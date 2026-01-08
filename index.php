@@ -86,10 +86,17 @@ $iconMap = [
                             <?php echo $product['discount_percent']; ?>% OFF
                         </div>
 
-                        <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
-                            <i data-lucide="<?php echo $icon; ?>"
-                                style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
-                        </div>
+                        <?php if (!empty($product['image'])): ?>
+                            <div class="product-banner">
+                                <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                                    style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
+                            </div>
+                        <?php else: ?>
+                            <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
+                                <i data-lucide="<?php echo $icon; ?>"
+                                    style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="product-header">
                             <h3 class="product-name">
