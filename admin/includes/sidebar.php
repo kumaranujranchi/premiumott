@@ -22,19 +22,5 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <i data-lucide="plus-circle"></i> Add Product
             </a>
         </div>
-
-        <div class="menu-section">
-            <span class="menu-label">Component</span>
-            <a href="#" class="menu-item"><i data-lucide="layers"></i> UI Elements</a>
-            <a href="#" class="menu-item"><i data-lucide="file-text"></i> Forms</a>
-            <a href="#" class="menu-item"><i data-lucide="bar-chart-2"></i> Charts</a>
-            <a href="#" class="menu-item"><i data-lucide="table"></i> Tables</a>
-        </div>
-
-        <div class="menu-section">
-            <span class="menu-label">Featured</span>
-            <a href="#" class="menu-item"><i data-lucide="file"></i> Pages</a>
-            <a href="#" class="menu-item"><i data-lucide="help-circle"></i> Documentation</a>
-        </div>
     </div>
 </aside>
