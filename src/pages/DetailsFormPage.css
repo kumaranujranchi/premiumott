@@ -86,6 +86,8 @@
   font-family: inherit;
   transition: all 0.2s;
   resize: vertical;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .details-card .form-group input:focus,
