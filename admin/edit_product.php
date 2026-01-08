@@ -66,157 +66,164 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product - Premium OTT Store Admin</title>
+    <title>Edit Product - Premium OTT Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
-    <div class="admin-container" style="max-width: 900px;">
-        <header class="admin-header">
-            <div>
-                <h1>Edit Product</h1>
-                <p style="color: var(--text-dim); margin-top: 4px; font-size: 14px;">Modify the details of
-                    "<?php echo htmlspecialchars($product['name']); ?>"</p>
+    <?php include 'includes/sidebar.php'; ?>
+
+    <main class="main-content">
+        <?php include 'includes/top_nav.php'; ?>
+
+        <div class="content-body">
+            <div class="hound-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="card-header-hound">
+                    <h3 class="card-title-hound">Edit Product: <?php echo htmlspecialchars($product['name']); ?></h3>
+                    <a href="index.php" class="btn-hound" style="background: rgba(255,255,255,0.05); color: #fff;">
+                        <i data-lucide="x" style="width: 16px;"></i> Cancel
+                    </a>
+                </div>
+                <div class="card-body-hound">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <div class="form-hound-group">
+                            <label>Product Banner Image</label>
+                            <div class="upload-area" onclick="document.getElementById('image-input').click()"
+                                style="background: var(--bg-input); border: 2px dashed var(--border); padding: 40px; text-align: center; border-radius: 4px; cursor: pointer;">
+                                <?php if ($product['image']): ?>
+                                    <div id="image-preview">
+                                        <img id="preview-img" src="../<?php echo $product['image']; ?>"
+                                            style="max-height: 200px; border-radius: 4px; margin: 0 auto; display: block;">
+                                        <p style="margin-top: 10px; font-size: 11px; color: var(--text-dim);">Click to
+                                            replace current image</p>
+                                    </div>
+                                    <div id="upload-prompt" style="display: none;">
+                                        <i data-lucide="image"
+                                            style="width: 48px; height: 48px; color: var(--text-dim); margin-bottom: 10px;"></i>
+                                        <p style="margin: 0; font-weight: 600;">Click to upload banner</p>
+                                    </div>
+                                <?php else: ?>
+                                    <div id="image-preview" style="display: none;">
+                                        <img id="preview-img"
+                                            style="max-height: 200px; border-radius: 4px; margin: 0 auto; display: block;">
+                                    </div>
+                                    <div id="upload-prompt">
+                                        <i data-lucide="image"
+                                            style="width: 48px; height: 48px; color: var(--text-dim); margin-bottom: 10px;"></i>
+                                        <p style="margin: 0; font-weight: 600;">Click to upload banner</p>
+                                    </div>
+                                <?php endif; ?>
+                                <input type="file" name="image" id="image-input" style="display: none;"
+                                    onchange="previewImage(this)">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-hound-group" style="grid-column: span 2;">
+                                <label>Product Name</label>
+                                <input type="text" name="name" class="form-hound-control"
+                                    value="<?php echo htmlspecialchars($product['name']); ?>" required>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Tagline</label>
+                                <input type="text" name="tagline" class="form-hound-control"
+                                    value="<?php echo htmlspecialchars($product['tagline']); ?>">
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Category</label>
+                                <select name="category" class="form-hound-control">
+                                    <option value="Streaming" <?php echo $product['category'] == 'Streaming' ? 'selected' : ''; ?>>Streaming</option>
+                                    <option value="Education" <?php echo $product['category'] == 'Education' ? 'selected' : ''; ?>>Education</option>
+                                    <option value="Productivity" <?php echo $product['category'] == 'Productivity' ? 'selected' : ''; ?>>Productivity</option>
+                                    <option value="Gaming" <?php echo $product['category'] == 'Gaming' ? 'selected' : ''; ?>>Gaming</option>
+                                    <option value="Design" <?php echo $product['category'] == 'Design' ? 'selected' : ''; ?>>Design</option>
+                                </select>
+                            </div>
+
+                            <div class="form-hound-group" style="grid-column: span 2;">
+                                <label>Description</label>
+                                <textarea name="description" class="form-hound-control"
+                                    rows="4"><?php echo htmlspecialchars($product['description']); ?></textarea>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Currency</label>
+                                <select name="currency" class="form-hound-control">
+                                    <option value="USD" <?php echo $product['currency'] == 'USD' ? 'selected' : ''; ?>>USD
+                                        ($)</option>
+                                    <option value="INR" <?php echo $product['currency'] == 'INR' ? 'selected' : ''; ?>>INR
+                                        (₹)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>License Type</label>
+                                <input type="text" name="license_type" class="form-hound-control"
+                                    value="<?php echo htmlspecialchars($product['license_type']); ?>">
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Original Price</label>
+                                <input type="number" step="0.01" name="original_price" class="form-hound-control"
+                                    value="<?php echo $product['original_price']; ?>" required>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Discounted Price</label>
+                                <input type="number" step="0.01" name="discounted_price" class="form-hound-control"
+                                    value="<?php echo $product['discounted_price']; ?>" required>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Discount %</label>
+                                <input type="number" name="discount_percent" class="form-hound-control"
+                                    value="<?php echo $product['discount_percent']; ?>">
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Rating (1-5)</label>
+                                <input type="number" step="0.1" name="rating" class="form-hound-control"
+                                    value="<?php echo $product['rating']; ?>">
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Theme Color</label>
+                                <input type="color" name="color" value="<?php echo $product['color']; ?>"
+                                    class="form-hound-control" style="height: 45px; padding: 5px;">
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Status</label>
+                                <div style="display: flex; align-items: center; gap: 10px; height: 45px;">
+                                    <input type="checkbox" name="is_active" <?php echo $product['is_active'] ? 'checked' : ''; ?> style="width: 18px; height: 18px; accent-color: var(--stat-red);">
+                                    <span style="font-size: 14px; font-weight: 600;">Active & Visible</span>
+                                </div>
+                            </div>
+
+                            <div class="form-hound-group" style="grid-column: span 2;">
+                                <label>Features (One per line)</label>
+                                <textarea name="features" class="form-hound-control"
+                                    rows="5"><?php echo implode("\n", $product['features']); ?></textarea>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <button type="submit" class="btn-hound btn-hound-primary"
+                                style="width: 100%; justify-content: center; padding: 15px; font-size: 15px;">
+                                <i data-lucide="save" style="width: 18px;"></i> Save Product Changes
+                            </button>
+                        </div>
+                        <input type="hidden" name="icon" value="package">
+                        <input type="hidden" name="reviews" value="<?php echo $product['reviews']; ?>">
+                    </form>
+                </div>
             </div>
-            <a href="index.php" class="btn btn-outline">
-                <i data-lucide="x"></i> Cancel
-            </a>
-        </header>
-
-        <form action="" method="POST" enctype="multipart/form-data" class="glass-card">
-            <div class="form-grid">
-                <div class="form-group full">
-                    <label>Product Image</label>
-                    <div class="upload-area" onclick="document.getElementById('image-input').click()">
-                        <?php if ($product['image']): ?>
-                            <div id="image-preview">
-                                <img id="preview-img" src="../<?php echo $product['image']; ?>"
-                                    style="max-height: 200px; border-radius: 12px; margin: 0 auto; display: block;">
-                                <p style="margin-top: 10px; font-size: 12px; color: var(--text-dim);">Click to replace
-                                    current image</p>
-                            </div>
-                            <div id="upload-prompt" style="display: none;">
-                                <i data-lucide="image"
-                                    style="width: 48px; height: 48px; color: var(--text-dim); margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-weight: 600;">Click to upload banner image</p>
-                            </div>
-                        <?php else: ?>
-                            <div id="image-preview" style="display: none;">
-                                <img id="preview-img"
-                                    style="max-height: 200px; border-radius: 12px; margin: 0 auto; display: block;">
-                            </div>
-                            <div id="upload-prompt">
-                                <i data-lucide="image"
-                                    style="width: 48px; height: 48px; color: var(--text-dim); margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-weight: 600;">Click to upload banner image</p>
-                            </div>
-                        <?php endif; ?>
-                        <input type="file" name="image" id="image-input" style="display: none;"
-                            onchange="previewImage(this)">
-                    </div>
-                </div>
-
-                <div class="form-group full">
-                    <label>Product Name</label>
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Tagline (Short Highlight)</label>
-                    <input type="text" name="tagline" value="<?php echo htmlspecialchars($product['tagline']); ?>">
-                </div>
-
-                <div class="form-group">
-                    <label>Category</label>
-                    <select name="category">
-                        <option value="Streaming" <?php echo $product['category'] == 'Streaming' ? 'selected' : ''; ?>>
-                            Streaming</option>
-                        <option value="Education" <?php echo $product['category'] == 'Education' ? 'selected' : ''; ?>>
-                            Education</option>
-                        <option value="Productivity" <?php echo $product['category'] == 'Productivity' ? 'selected' : ''; ?>>Productivity</option>
-                        <option value="Gaming" <?php echo $product['category'] == 'Gaming' ? 'selected' : ''; ?>>Gaming
-                        </option>
-                        <option value="Design" <?php echo $product['category'] == 'Design' ? 'selected' : ''; ?>>Design
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group full">
-                    <label>Description</label>
-                    <textarea name="description"
-                        rows="4"><?php echo htmlspecialchars($product['description']); ?></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Currency</label>
-                    <select name="currency">
-                        <option value="USD" <?php echo $product['currency'] == 'USD' ? 'selected' : ''; ?>>USD ($)
-                        </option>
-                        <option value="INR" <?php echo $product['currency'] == 'INR' ? 'selected' : ''; ?>>INR (₹)
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>License Type</label>
-                    <input type="text" name="license_type"
-                        value="<?php echo htmlspecialchars($product['license_type']); ?>">
-                </div>
-
-                <div class="form-group">
-                    <label>Original Price</label>
-                    <input type="number" step="0.01" name="original_price"
-                        value="<?php echo $product['original_price']; ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Discounted Price</label>
-                    <input type="number" step="0.01" name="discounted_price"
-                        value="<?php echo $product['discounted_price']; ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Discount Percentage (%)</label>
-                    <input type="number" name="discount_percent" value="<?php echo $product['discount_percent']; ?>">
-                </div>
-
-                <div class="form-group">
-                    <label>Rating (1-5)</label>
-                    <input type="number" step="0.1" name="rating" value="<?php echo $product['rating']; ?>" max="5">
-                </div>
-
-                <div class="form-group">
-                    <label>Theme Color</label>
-                    <input type="color" name="color" value="<?php echo $product['color']; ?>"
-                        style="height: 50px; padding: 5px;">
-                </div>
-
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-top: 30px;">
-                        <input type="checkbox" name="is_active" <?php echo $product['is_active'] ? 'checked' : ''; ?>
-                            style="width: auto;">
-                        Active & Published
-                    </label>
-                </div>
-
-                <div class="form-group full">
-                    <label>Features (One per line)</label>
-                    <textarea name="features" rows="6"><?php echo implode("\n", $product['features']); ?></textarea>
-                </div>
-
-                <div class="form-group full" style="padding-top: 20px;">
-                    <button type="submit" class="btn btn-primary"
-                        style="width: 100%; justify-content: center; padding: 16px;">
-                        Update Product Plan
-                    </button>
-                    <input type="hidden" name="icon" value="package">
-                    <input type="hidden" name="reviews" value="<?php echo $product['reviews']; ?>">
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+    </main>
 
     <script>
         lucide.createIcons();
