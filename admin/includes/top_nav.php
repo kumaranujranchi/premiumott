@@ -5,6 +5,10 @@
     </div>
 
     <div class="nav-actions">
+        <a href="../index.php" class="nav-link" target="_blank"
+            style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; margin-right: 10px;">
+            <i data-lucide="external-link" style="width: 16px;"></i> Go to Website
+        </a>
         <a href="#" class="nav-link"><i data-lucide="settings" style="width: 20px;"></i></a>
         <a href="#" class="nav-link"><i data-lucide="bell" style="width: 20px;"></i></a>
         <div class="user-profile">
