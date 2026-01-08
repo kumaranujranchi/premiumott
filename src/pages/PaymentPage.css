@@ -58,6 +58,21 @@
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
+.form-group input.error {
+  border-color: var(--danger);
+}
+
+.form-group input.error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.error-msg {
+  display: block;
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 .card-input-wrapper {
   position: relative;
 }

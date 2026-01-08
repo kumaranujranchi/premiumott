@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useMemo } from 'react'
 import { CheckCircle2, Clock, MessageCircle, Mail, ArrowRight } from 'lucide-react'
 import { getProductById } from '../data/products'
 import './ConfirmationPage.css'
@@ -6,6 +7,12 @@ import './ConfirmationPage.css'
 function ConfirmationPage() {
   const { id } = useParams()
   const product = getProductById(id)
+  
+  const orderNumber = useMemo(() => {
+    const timestamp = Date.now().toString(36).toUpperCase()
+    const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase()
+    return `ORD-${timestamp}${randomSuffix}`
+  }, [])
 
   if (!product) {
     return (
@@ -17,8 +24,6 @@ function ConfirmationPage() {
       </div>
     )
   }
-
-  const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}`
 
   return (
     <div className="confirmation-page">

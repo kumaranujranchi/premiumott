@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { ChevronLeft, CreditCard, Shield, Lock, AlertCircle } from 'lucide-react'
 import { getProductById } from '../data/products'
@@ -7,6 +8,14 @@ function PaymentPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const product = getProductById(id)
+  const [formData, setFormData] = useState({
+    cardholderName: '',
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    email: ''
+  })
+  const [errors, setErrors] = useState({})
 
   if (!product) {
     return (
@@ -19,8 +28,28 @@ function PaymentPage() {
     )
   }
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' })
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+    if (!formData.cardholderName.trim()) newErrors.cardholderName = 'Name is required'
+    if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card number is required'
+    if (!formData.expiry.trim()) newErrors.expiry = 'Expiry is required'
+    if (!formData.cvv.trim()) newErrors.cvv = 'CVV is required'
+    if (!formData.email.trim()) newErrors.email = 'Email is required'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handlePayment = () => {
-    navigate(`/details/${product.id}`)
+    if (validateForm()) {
+      navigate(`/details/${product.id}`)
+    }
   }
 
   return (
@@ -40,31 +69,71 @@ function PaymentPage() {
               
               <div className="form-group">
                 <label>Cardholder Name</label>
-                <input type="text" placeholder="John Smith" />
+                <input 
+                  type="text" 
+                  name="cardholderName"
+                  value={formData.cardholderName}
+                  onChange={handleChange}
+                  placeholder="John Smith"
+                  className={errors.cardholderName ? 'error' : ''}
+                />
+                {errors.cardholderName && <span className="error-msg">{errors.cardholderName}</span>}
               </div>
 
               <div className="form-group">
                 <label>Card Number</label>
                 <div className="card-input-wrapper">
-                  <input type="text" placeholder="1234 5678 9012 3456" />
+                  <input 
+                    type="text" 
+                    name="cardNumber"
+                    value={formData.cardNumber}
+                    onChange={handleChange}
+                    placeholder="1234 5678 9012 3456"
+                    className={errors.cardNumber ? 'error' : ''}
+                  />
                   <CreditCard size={20} className="card-icon" />
                 </div>
+                {errors.cardNumber && <span className="error-msg">{errors.cardNumber}</span>}
               </div>
 
               <div className="form-row">
                 <div className="form-group">
                   <label>Expiry Date</label>
-                  <input type="text" placeholder="MM/YY" />
+                  <input 
+                    type="text" 
+                    name="expiry"
+                    value={formData.expiry}
+                    onChange={handleChange}
+                    placeholder="MM/YY"
+                    className={errors.expiry ? 'error' : ''}
+                  />
+                  {errors.expiry && <span className="error-msg">{errors.expiry}</span>}
                 </div>
                 <div className="form-group">
                   <label>CVV</label>
-                  <input type="text" placeholder="123" />
+                  <input 
+                    type="text" 
+                    name="cvv"
+                    value={formData.cvv}
+                    onChange={handleChange}
+                    placeholder="123"
+                    className={errors.cvv ? 'error' : ''}
+                  />
+                  {errors.cvv && <span className="error-msg">{errors.cvv}</span>}
                 </div>
               </div>
 
               <div className="form-group">
                 <label>Email Address</label>
-                <input type="email" placeholder="you@example.com" />
+                <input 
+                  type="email" 
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                  className={errors.email ? 'error' : ''}
+                />
+                {errors.email && <span className="error-msg">{errors.email}</span>}
               </div>
 
               <div className="security-badges">
