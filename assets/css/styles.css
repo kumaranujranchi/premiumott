@@ -2549,3 +2549,29 @@ img {
     }
 }
 
+
+/* --- FOOTER MOBILE PAYMENT ICONS FIX --- */
+
+@media (max-width: 480px) {
+    .payment-methods {
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: space-between;
+    }
+
+    .pay-card {
+        padding: 4px 8px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+    }
+
+    .pay-card img {
+        height: 14px;
+        width: auto;
+        max-width: 100%;
+    }
+}
+
