@@ -1,0 +1,133 @@
+.details-page {
+  padding: 60px 0 80px;
+  background: var(--bg-secondary);
+  min-height: calc(100vh - 200px);
+}
+
+.details-content {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.success-banner {
+  background: var(--success-light);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.success-banner svg {
+  color: var(--success);
+  margin-bottom: 16px;
+}
+
+.success-banner h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.success-banner p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.details-card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  border: 1px solid var(--border);
+}
+
+.product-reminder {
+  background: var(--primary-light);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reminder-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.reminder-product {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.details-card .form-group {
+  margin-bottom: 24px;
+}
+
+.details-card .form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.details-card .form-group input,
+.details-card .form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-family: inherit;
+  transition: all 0.2s;
+  resize: vertical;
+}
+
+.details-card .form-group input:focus,
+.details-card .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-hint {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+  .details-page {
+    padding: 40px 0 60px;
+  }
+
+  .success-banner {
+    padding: 32px 24px;
+  }
+
+  .details-card {
+    padding: 24px;
+  }
+}
