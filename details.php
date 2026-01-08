@@ -6,11 +6,14 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $product = getProduct($pdo, $id);
 
 if (!$product) {
-    echo '<div class="container" style="padding: 60px 20px; text-align: center;">
-            <h2>Product not found</h2>
-            <a href="index.php" class="btn-primary" style="margin-top: 20px; display: inline-flex;">
-              Back to Home
-            </a>
+    echo '<div class="container" style="padding: 100px 20px; text-align: center;">
+            <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+                <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
+                <h2 style="margin-bottom: 20px;">Product not found</h2>
+                <a href="index.php" class="btn-primary">
+                  <span>Back to Home</span>
+                </a>
+            </div>
           </div>';
     include 'includes/footer.php';
     exit;
@@ -32,57 +35,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="details-page">
-    <div class="container">
-        <div class="details-content">
-            <div class="success-banner">
-                <i data-lucide="check-circle" style="width: 48px; height: 48px;"></i>
-                <h2>Payment Successful!</h2>
-                <p>Thank you for your purchase. Please provide your details below so we can deliver your product.</p>
+<div class="details-page-premium">
+    <div class="container small-container">
+        <!-- Progress Steps -->
+        <div class="order-progress">
+            <div class="progress-step completed">
+                <div class="step-dot"><i data-lucide="check"></i></div>
+                <span>Selection</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <div class="step-dot">2</div>
+                <span>Your Details</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <div class="step-dot">3</div>
+                <span>Access</span>
+            </div>
+        </div>
+
+        <div class="success-header-card">
+            <div class="success-icon-animate">
+                <i data-lucide="party-popper"></i>
+            </div>
+            <h1>Payment Successful!</h1>
+            <p>Thank you for choosing <strong><?php echo $product['name']; ?></strong>. Please provide your delivery
+                info below.</p>
+        </div>
+
+        <div class="details-form-card">
+            <div class="form-header">
+                <div class="purchase-badge">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Order: <?php echo $product['name']; ?> (<?php echo $product['license_type']; ?>)</span>
+                </div>
             </div>
 
-            <div class="details-card">
-                <div class="product-reminder">
-                    <span class="reminder-label">Your Purchase:</span>
-                    <span class="reminder-product">
-                        <?php echo $product['name']; ?> -
-                        <?php echo $product['license_type']; ?>
-                    </span>
+            <form method="POST" class="premium-form">
+                <div class="form-grid-2">
+                    <div class="form-group-premium">
+                        <label><i data-lucide="user"></i> Full Name *</label>
+                        <div class="input-wrapper">
+                            <input type="text" name="name" placeholder="John Smith" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group-premium">
+                        <label><i data-lucide="mail"></i> Email Address *</label>
+                        <div class="input-wrapper">
+                            <input type="email" name="email" placeholder="you@example.com" required />
+                        </div>
+                        <span class="input-hint">Order updates will be sent here</span>
+                    </div>
+
+                    <div class="form-group-premium">
+                        <label><i data-lucide="phone"></i> WhatsApp Number *</label>
+                        <div class="input-wrapper">
+                            <input type="tel" name="whatsapp" placeholder="+91 91234 56789" required />
+                        </div>
+                        <span class="input-hint">Our team will contact you for delivery</span>
+                    </div>
+
+                    <div class="form-group-premium">
+                        <label><i data-lucide="message-square"></i> Special Requirements</label>
+                        <div class="input-wrapper">
+                            <textarea name="requirements"
+                                placeholder="e.g. Preferred email for activation, company name, etc."
+                                rows="4"></textarea>
+                        </div>
+                    </div>
                 </div>
 
-                <form method="POST">
-                    <div class="form-group">
-                        <label>Full Name *</label>
-                        <input type="text" name="name" placeholder="John Smith" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email Address *</label>
-                        <input type="email" name="email" placeholder="you@example.com" required />
-                        <span class="form-hint">We'll send order updates to this email</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>WhatsApp Number *</label>
-                        <input type="tel" name="whatsapp" placeholder="+1 234 567 8900" required />
-                        <span class="form-hint">Our sales team will contact you on WhatsApp</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Additional Requirements</label>
-                        <textarea name="requirements"
-                            placeholder="Any specific requirements for your license? (e.g., preferred email for account, number of users needed)"
-                            rows="4"></textarea>
-                    </div>
-
-                    <button type="submit" class="submit-btn"
-                        style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span>Submit Details</span>
+                <div class="form-footer">
+                    <p class="privacy-note"><i data-lucide="lock" style="width: 14px;"></i> Your data is 100% secure and
+                        encrypted.</p>
+                    <button type="submit" class="submit-btn-premium">
+                        <span>Submit & Get Access</span>
+                        <i data-lucide="arrow-right"></i>
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    lucide.createIcons();
+</script>
 
 <?php include 'includes/footer.php'; ?>
