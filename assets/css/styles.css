@@ -434,6 +434,7 @@ img {
   margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex: 1;
@@ -488,15 +489,20 @@ img {
   width: 100%;
   padding: 14px 20px;
   background: var(--primary);
-  color: white;
+  color: #000;
   border: none;
   border-radius: var(--radius-md);
   font-size: 15px;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-weight: 800;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 1;
 }
+
+.view-deal-btn:hover {
+  color: #fff;
+}
+
 
 .view-deal-btn i, .view-deal-btn span {
   position: relative;
@@ -621,15 +627,20 @@ img {
   align-items: center;
   gap: 8px;
   background: var(--primary);
-  color: white;
+  color: #000;
   padding: 14px 28px;
   border-radius: var(--radius-md);
   font-size: 15px;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-weight: 800;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 1;
 }
+
+.btn-primary:hover {
+  color: #fff;
+}
+
 
 .btn-primary i, .btn-primary span {
   position: relative;
@@ -674,16 +685,17 @@ img {
   align-items: center;
   gap: 8px;
   background: var(--bg-primary);
-  color: var(--text-primary);
+  color: #fff;
   padding: 14px 28px;
   border-radius: var(--radius-md);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   border: 1px solid var(--border);
-  transition: all 0.2s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 1;
 }
+
 
 .btn-secondary span, .btn-secondary i {
   position: relative;
@@ -1150,15 +1162,27 @@ img {
 .proceed-btn {
   position: relative;
   width: 100%;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
   padding: 16px;
   border: none;
   border-radius: var(--radius-md);
   font-size: 16px;
-  font-weight: 700;
-  transition: all 0.2s;
+  font-weight: 800;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 1;
 }
+
+.proceed-btn.active {
+  background: var(--primary);
+  color: #000;
+}
+
+.proceed-btn.active:hover {
+  color: #fff;
+}
+
 
 .proceed-btn span, .proceed-btn i {
   position: relative;
