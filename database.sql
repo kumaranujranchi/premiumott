@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS products (
     icon VARCHAR(50),
     color VARCHAR(20),
     image VARCHAR(255),
+    currency VARCHAR(10) DEFAULT 'USD',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

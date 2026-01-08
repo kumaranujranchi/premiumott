@@ -14,6 +14,11 @@ $iconMap = [
     'tasks' => 'check-square',
     'mail' => 'mail',
 ];
+
+$currencyMap = [
+    'USD' => '$',
+    'INR' => '₹'
+];
 ?>
 
 <div class="home-page">
@@ -119,10 +124,10 @@ $iconMap = [
 
                         <div class="product-pricing">
                             <div class="prices">
-                                <span class="price-current">$
+                                <span class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?>
                                     <?php echo $product['discounted_price']; ?>
                                 </span>
-                                <span class="price-original">$
+                                <span class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?>
                                     <?php echo $product['original_price']; ?>
                                 </span>
                             </div>

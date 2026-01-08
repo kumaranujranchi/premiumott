@@ -17,6 +17,12 @@ if (!$product) {
 }
 
 $orderNumber = 'ORD-' . strtoupper(dechex(time())) . strtoupper(substr(md5(rand()), 0, 4));
+
+$currencyMap = [
+    'USD' => '$',
+    'INR' => '₹'
+];
+$symbol = $currencyMap[$product['currency'] ?? 'USD'];
 ?>
 
 <div class="confirmation-page">
@@ -56,14 +62,14 @@ $orderNumber = 'ORD-' . strtoupper(dechex(time())) . strtoupper(substr(md5(rand(
                             <?php echo $product['license_type']; ?>
                         </span>
                     </div>
-                    <span class="order-price">$
+                    <span class="order-price"><?php echo $symbol; ?>
                         <?php echo $product['discounted_price']; ?>
                     </span>
                 </div>
 
                 <div class="order-total">
                     <span>Total Paid</span>
-                    <span>$
+                    <span><?php echo $symbol; ?>
                         <?php echo $product['discounted_price']; ?>
                     </span>
                 </div>

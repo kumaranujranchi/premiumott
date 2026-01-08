@@ -27,7 +27,13 @@ $iconMap = [
     'mail' => 'mail',
 ];
 
+$currencyMap = [
+    'USD' => '$',
+    'INR' => '₹'
+];
+
 $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+$symbol = $currencyMap[$product['currency'] ?? 'USD'];
 ?>
 
 <div class="product-page">
@@ -102,10 +108,10 @@ $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users'
                 <div class="pricing-card">
                     <div class="pricing-header">
                         <div class="price-display">
-                            <span class="price-discounted">$
+                            <span class="price-discounted"><?php echo $symbol; ?>
                                 <?php echo $product['discounted_price']; ?>
                             </span>
-                            <span class="price-original-lg">$
+                            <span class="price-original-lg"><?php echo $symbol; ?>
                                 <?php echo $product['original_price']; ?>
                             </span>
                         </div>
@@ -115,7 +121,7 @@ $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users'
                     </div>
 
                     <div class="savings-banner">
-                        You save $
+                        You save <?php echo $symbol; ?>
                         <?php echo $product['original_price'] - $product['discounted_price']; ?> (
                         <?php echo $product['discount_percent']; ?>% off)
                     </div>

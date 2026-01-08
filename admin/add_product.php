@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
+    $currency = $_POST['currency'] ?: 'USD';
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
     $image = "";
@@ -37,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency]);
 
         $productId = $pdo->lastInsertId();
 
@@ -191,11 +192,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="grid">
                 <div class="form-group">
-                    <label>Original Price ($)</label>
-                    <input type="number" step="0.01" name="original_price" required>
+                    <label>Original Price</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select name="currency" style="width: 80px;">
+                            <option value="USD">USD ($)</option>
+                            <option value="INR">INR (₹)</option>
+                        </select>
+                        <input type="number" step="0.01" name="original_price" required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Discounted Price ($)</label>
+                    <label>Discounted Price</label>
                     <input type="number" step="0.01" name="discounted_price" required>
                 </div>
             </div>

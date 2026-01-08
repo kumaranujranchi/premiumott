@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
+    $currency = $_POST['currency'];
     $features = explode("\n", str_replace("\r", "", $_POST['features']));
 
     $image = $product['image'];
@@ -52,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=? WHERE id=?");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $id]);
+        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=?, currency=? WHERE id=?");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $id]);
 
         // Update features: delete old ones and insert new ones
         $pdo->prepare("DELETE FROM product_features WHERE product_id = ?")->execute([$id]);
@@ -218,12 +219,20 @@ $features_text = implode("\n", $product['features']);
 
             <div class="grid">
                 <div class="form-group">
-                    <label>Original Price ($)</label>
-                    <input type="number" step="0.01" name="original_price" required
-                        value="<?php echo $product['original_price']; ?>">
+                    <label>Original Price</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select name="currency" style="width: 80px;">
+                            <option value="USD" <?php echo $product['currency'] == 'USD' ? 'selected' : ''; ?>>USD ($)
+                            </option>
+                            <option value="INR" <?php echo $product['currency'] == 'INR' ? 'selected' : ''; ?>>INR (₹)
+                            </option>
+                        </select>
+                        <input type="number" step="0.01" name="original_price" required
+                            value="<?php echo $product['original_price']; ?>">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Discounted Price ($)</label>
+                    <label>Discounted Price</label>
                     <input type="number" step="0.01" name="discounted_price" required
                         value="<?php echo $product['discounted_price']; ?>">
                 </div>
