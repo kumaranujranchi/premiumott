@@ -14,7 +14,7 @@ $products = getAllProducts($pdo);
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary: #3B82F6;
+            --primary: #3DFE02;
             --bg: #F9FAFB;
             --card: #FFFFFF;
             --text: #111827;

@@ -65,7 +65,7 @@ $features_text = implode("\n", $product['features']);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #3B82F6;
+            --primary: #3DFE02;
             --bg: #F9FAFB;
             --card: #FFFFFF;
             --text: #111827;

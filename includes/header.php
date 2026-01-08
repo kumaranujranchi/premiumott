@@ -26,8 +26,7 @@
     <header class="header">
         <div class="container header-content">
             <a href="index.php" class="logo">
-                <div class="logo-icon">P</div>
-                <span class="logo-text">Premium<span class="logo-highlight"> OTT</span></span>
+                <img src="assets/img/logo.png" alt="Premium OTT Store" style="height: 45px; width: auto;">
             </a>
 
             <nav class="nav" id="mainNav">

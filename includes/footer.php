@@ -4,8 +4,7 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <div class="footer-logo">
-                    <div class="logo-icon">P</div>
-                    <span class="logo-text">Premium<span class="logo-highlight"> OTT</span></span>
+                    <img src="assets/img/logo.png" alt="Premium OTT Store" style="height: 40px; width: auto;">
                 </div>
                 <p class="footer-desc">
                     The world's leading marketplace for premium OTT and digital subscriptions. We provide access to your
