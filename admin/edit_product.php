@@ -1,4 +1,5 @@
 <?php
+include 'auth_check.php';
 include '../includes/db.php';
 
 $id = (int) $_GET['id'];

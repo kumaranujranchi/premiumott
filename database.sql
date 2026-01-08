@@ -37,3 +37,13 @@ CREATE TABLE IF NOT EXISTS orders (
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Default admin: admin@premiumott.com / Admin@123
+INSERT INTO admins (email, password) VALUES ('admin@premiumott.com', '$2y$10$iI0T7Q.fWp.fKk7fK/L0e.hC5U0P.kX1K.K/K.K.K/K.K.K/K.K.K');

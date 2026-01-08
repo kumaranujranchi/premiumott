@@ -1,4 +1,5 @@
 <?php
+include 'auth_check.php';
 include '../includes/db.php';
 
 if (isset($_GET['id']) && isset($_GET['status'])) {
@@ -99,18 +100,21 @@ $orders = $stmt->fetchAll();
                                 </td>
                                 <td>
                                     <div style="font-weight: 700; color: #fff;">
-                                        <?php echo htmlspecialchars($o['product_name']); ?></div>
+                                        <?php echo htmlspecialchars($o['product_name']); ?>
+                                    </div>
                                     <div
                                         style="font-size: 11px; color: var(--primary); font-weight: 800; text-transform: uppercase;">
                                         Paid:
-                                        <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $o['total_amount']; ?>
+                                        <?php echo $o['currency'] == 'INR' ? '₹' : '$'; ?>     <?php echo $o['total_amount']; ?>
                                     </div>
                                 </td>
                                 <td>
                                     <div style="font-weight: 600;">
-                                        <?php echo htmlspecialchars($o['customer_name'] ?: 'Guest User'); ?></div>
+                                        <?php echo htmlspecialchars($o['customer_name'] ?: 'Guest User'); ?>
+                                    </div>
                                     <div style="font-size: 12px; color: var(--text-dim);">
-                                        <?php echo htmlspecialchars($o['customer_email']); ?></div>
+                                        <?php echo htmlspecialchars($o['customer_email']); ?>
+                                    </div>
                                 </td>
                                 <td>
                                     <?php if ($o['customer_whatsapp']): ?>

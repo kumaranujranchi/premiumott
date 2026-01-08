@@ -1,4 +1,5 @@
 <?php
+include 'auth_check.php';
 include '../includes/db.php';
 $products = getAllProducts($pdo);
 ?>
@@ -75,10 +76,12 @@ $products = getAllProducts($pdo);
                                 </td>
                                 <td>
                                     <div style="font-weight: 700; font-size: 15px;">
-                                        <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $p['discounted_price']; ?>
+                                        <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>
+                                        <?php echo $p['discounted_price']; ?>
                                     </div>
                                     <div style="font-size: 12px; color: var(--text-dim); text-decoration: line-through;">
-                                        <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>    <?php echo $p['original_price']; ?>
+                                        <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?>
+                                        <?php echo $p['original_price']; ?>
                                     </div>
                                 </td>
                                 <td>
