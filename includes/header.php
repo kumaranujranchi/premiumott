@@ -12,7 +12,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css?v=1.2">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
 </head>
