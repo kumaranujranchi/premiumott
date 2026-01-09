@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="assets/css/styles.css?v=1.2">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
+
+    <!-- Social Media Sharing Meta Tags (SEO) -->
+    <meta property="og:title" content="Premium OTT Store - Lifetime Digital Deals">
+    <meta property="og:description"
+        content="Access your favorite streaming platforms without the high monthly costs. Premium OTT and digital subscriptions at unbeatable prices.">
+    <meta property="og:image" content="https://premiumott.com/assets/img/logo.png">
+    <meta property="og:url" content="https://premiumott.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Premium OTT Store - Lifetime Digital Deals">
+    <meta name="twitter:description" content="Access your favorite streaming platforms without the high monthly costs.">
+    <meta name="twitter:image" content="https://premiumott.com/assets/img/logo.png">
 </head>
 
 <body>
