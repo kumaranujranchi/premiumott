@@ -2040,7 +2040,7 @@ img {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    grid-template-columns: 1.5fr 1fr 1fr 1.8fr;
     gap: 60px;
     margin-bottom: 60px;
 }
@@ -2137,6 +2137,13 @@ img {
     border-radius: 20px;
     padding: 24px;
     border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.security-section:hover {
+    border-color: rgba(61, 254, 2, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .security-section h4 {
@@ -2163,21 +2170,32 @@ img {
 .payment-methods {
     display: flex;
     gap: 12px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .pay-card {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 10px;
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 12px;
+    border-radius: 8px;
     border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .pay-card img {
     height: 18px;
-    opacity: 0.7;
+    width: auto;
+    opacity: 0.6;
     filter: grayscale(1);
     transition: all 0.3s;
+}
+
+.pay-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .pay-card:hover img {
