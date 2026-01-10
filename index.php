@@ -73,76 +73,156 @@ $currencyMap = [
 
     <section id="deals" class="deals-section">
         <div class="container">
-            <div class="section-header">
-                <div>
-                    <h2 class="section-title">Featured Deals</h2>
-                    <p class="section-subtitle">Hand-picked software with the biggest discounts.</p>
-                </div>
-                <a href="#" class="view-all-link">
-                    View All <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                </a>
-            </div>
+            <?php
+            $selectedCategory = $_GET['category'] ?? null;
+            $selectedSection = $_GET['section'] ?? null;
 
-            <div class="products-grid">
-                <?php foreach ($products as $product):
-                    $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
-                    ?>
-                    <div class="product-card">
-                        <div class="discount-badge">
-                            <?php echo $product['discount_percent']; ?>% OFF
-                        </div>
-
-                        <?php if (!empty($product['image'])): ?>
-                            <div class="product-banner">
-                                <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
-                                    style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
-                            </div>
-                        <?php else: ?>
-                            <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
-                                <i data-lucide="<?php echo $icon; ?>"
-                                    style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="product-header">
-                            <h3 class="product-name">
-                                <?php echo $product['name']; ?>
-                            </h3>
-                            <div class="product-rating">
-                                <i data-lucide="star" style="width: 14px; height: 14px; fill: #F59E0B; color: #F59E0B;"></i>
-                                <span>
-                                    <?php echo $product['rating']; ?>
-                                </span>
-                            </div>
-                        </div>
-
-                        <p class="product-tagline">
-                            <?php echo $product['tagline']; ?>
-                        </p>
-                        <p class="product-description">
-                            <?php echo $product['description']; ?>
-                        </p>
-
-                        <div class="product-pricing">
-                            <div class="prices">
-                                <span class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?>
-                                    <?php echo $product['discounted_price']; ?>
-                                </span>
-                                <span class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?>
-                                    <?php echo $product['original_price']; ?>
-                                </span>
-                            </div>
-                            <span class="license-badge">
-                                <?php echo $product['license_type']; ?>
-                            </span>
-                        </div>
-
-                        <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
-                            <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                        </a>
+            if ($selectedCategory || $selectedSection) {
+                if ($selectedCategory) {
+                    $stmt = $pdo->prepare("SELECT * FROM products WHERE category = ? AND is_active = 1 ORDER BY created_at DESC");
+                    $stmt->execute([$selectedCategory]);
+                    $title = $selectedCategory . " Deals";
+                    $subtitle = "Exclusive offers in " . $selectedCategory . " category.";
+                } else {
+                    $stmt = $pdo->prepare("SELECT * FROM products WHERE section = ? AND is_active = 1 ORDER BY created_at DESC");
+                    $stmt->execute([$selectedSection]);
+                    $title = $selectedSection;
+                    $subtitle = "All deals in " . $selectedSection . " section.";
+                }
+                $filteredProducts = $stmt->fetchAll();
+                ?>
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title"><?php echo htmlspecialchars($title); ?></h2>
+                        <p class="section-subtitle"><?php echo htmlspecialchars($subtitle); ?></p>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                    <a href="index.php" class="view-all-link">
+                        Clear Filter <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                    </a>
+                </div>
+                <div class="products-grid">
+                    <?php if (empty($filteredProducts)): ?>
+                        <p style="grid-column: span 3; text-align: center; padding: 40px; color: var(--text-muted);">No products
+                            found here.</p>
+                    <?php else: ?>
+                        <?php foreach ($filteredProducts as $product):
+                            $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+                            ?>
+                            <div class="product-card">
+                                <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
+                                <?php if (!empty($product['image'])): ?>
+                                    <div class="product-banner">
+                                        <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                                            style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
+                                    </div>
+                                <?php else: ?>
+                                    <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
+                                        <i data-lucide="<?php echo $icon; ?>"
+                                            style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="product-header">
+                                    <h3 class="product-name"><?php echo $product['name']; ?></h3>
+                                    <div class="product-rating">
+                                        <i data-lucide="star" style="width: 14px; height: 14px; fill: #F59E0B; color: #F59E0B;"></i>
+                                        <span><?php echo $product['rating']; ?></span>
+                                    </div>
+                                </div>
+                                <p class="product-tagline"><?php echo $product['tagline']; ?></p>
+                                <p class="product-description"><?php echo $product['description']; ?></p>
+                                <div class="product-pricing">
+                                    <div class="prices">
+                                        <span
+                                            class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['discounted_price']; ?></span>
+                                        <span
+                                            class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['original_price']; ?></span>
+                                    </div>
+                                    <span class="license-badge"><?php echo $product['license_type']; ?></span>
+                                </div>
+                                <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
+                                    <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <?php
+            } else {
+                // Show multiple sections
+                $sections = ['New Arrivals', 'Hot Deals', 'Limited Stock', 'Coming Soon', 'Special Offers'];
+                foreach ($sections as $section) {
+                    $stmt = $pdo->prepare("SELECT * FROM products WHERE section = ? AND is_active = 1 ORDER BY created_at DESC LIMIT 6");
+                    $stmt->execute([$section]);
+                    $sectionProducts = $stmt->fetchAll();
+
+                    if (empty($sectionProducts))
+                        continue;
+                    ?>
+                    <div class="section-header" style="margin-top: <?php echo $section == 'New Arrivals' ? '0' : '60px'; ?>">
+                        <div>
+                            <h2 class="section-title"><?php echo $section; ?></h2>
+                            <p class="section-subtitle">
+                                <?php
+                                echo match ($section) {
+                                    'New Arrivals' => 'Latest software added to our marketplace.',
+                                    'Hot Deals' => 'Trending software with massive savings.',
+                                    'Limited Stock' => 'Grab these before they are gone forever.',
+                                    'Coming Soon' => 'Get ready for these upcoming amazing deals.',
+                                    'Special Offers' => 'Exclusive discounts for our premium members.',
+                                    default => 'Hand-picked software with the biggest discounts.'
+                                };
+                                ?>
+                            </p>
+                        </div>
+                        <a href="index.php?section=<?php echo urlencode($section); ?>" class="view-all-link">View All <i
+                                data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
+                    </div>
+
+                    <div class="products-grid">
+                        <?php foreach ($sectionProducts as $product):
+                            $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+                            ?>
+                            <div class="product-card">
+                                <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
+                                <?php if (!empty($product['image'])): ?>
+                                    <div class="product-banner">
+                                        <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                                            style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
+                                    </div>
+                                <?php else: ?>
+                                    <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
+                                        <i data-lucide="<?php echo $icon; ?>"
+                                            style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="product-header">
+                                    <h3 class="product-name"><?php echo $product['name']; ?></h3>
+                                    <div class="product-rating">
+                                        <i data-lucide="star" style="width: 14px; height: 14px; fill: #F59E0B; color: #F59E0B;"></i>
+                                        <span><?php echo $product['rating']; ?></span>
+                                    </div>
+                                </div>
+                                <p class="product-tagline"><?php echo $product['tagline']; ?></p>
+                                <p class="product-description"><?php echo $product['description']; ?></p>
+                                <div class="product-pricing">
+                                    <div class="prices">
+                                        <span
+                                            class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['discounted_price']; ?></span>
+                                        <span
+                                            class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['original_price']; ?></span>
+                                    </div>
+                                    <span class="license-badge"><?php echo $product['license_type']; ?></span>
+                                </div>
+                                <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
+                                    <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
         </div>
     </section>
 

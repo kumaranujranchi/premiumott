@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reviews = $_POST['reviews'];
     $discount_percent = $_POST['discount_percent'];
     $category = $_POST['category'];
+    $section = $_POST['section'];
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
@@ -43,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, license_type=?, icon=?, color=?, image=?, currency=?, is_active=? WHERE id=?");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $is_active, $id]);
+        $stmt = $pdo->prepare("UPDATE products SET name=?, tagline=?, description=?, original_price=?, discounted_price=?, rating=?, reviews=?, discount_percent=?, category=?, section=?, license_type=?, icon=?, color=?, image=?, currency=?, is_active=? WHERE id=?");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $section, $license_type, $icon, $color, $image, $currency, $is_active, $id]);
         $pdo->prepare("DELETE FROM product_features WHERE product_id = ?")->execute([$id]);
         $stmt = $pdo->prepare("INSERT INTO product_features (product_id, feature_text) VALUES (?, ?)");
         foreach ($features as $feature) {
@@ -137,11 +138,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-hound-group">
                                 <label>Category</label>
                                 <select name="category" class="form-hound-control">
+                                    <option value="SaaS" <?php echo $product['category'] == 'SaaS' ? 'selected' : ''; ?>>
+                                        SaaS</option>
+                                    <option value="Operating System" <?php echo $product['category'] == 'Operating System' ? 'selected' : ''; ?>>Operating System</option>
+                                    <option value="Social Media" <?php echo $product['category'] == 'Social Media' ? 'selected' : ''; ?>>Social Media</option>
+                                    <option value="SEO" <?php echo $product['category'] == 'SEO' ? 'selected' : ''; ?>>SEO
+                                    </option>
+                                    <option value="Automation" <?php echo $product['category'] == 'Automation' ? 'selected' : ''; ?>>Automation</option>
+                                    <option value="Hosting" <?php echo $product['category'] == 'Hosting' ? 'selected' : ''; ?>>Hosting</option>
+                                    <option value="Domain" <?php echo $product['category'] == 'Domain' ? 'selected' : ''; ?>>Domain</option>
                                     <option value="Streaming" <?php echo $product['category'] == 'Streaming' ? 'selected' : ''; ?>>Streaming</option>
                                     <option value="Education" <?php echo $product['category'] == 'Education' ? 'selected' : ''; ?>>Education</option>
-                                    <option value="Productivity" <?php echo $product['category'] == 'Productivity' ? 'selected' : ''; ?>>Productivity</option>
                                     <option value="Gaming" <?php echo $product['category'] == 'Gaming' ? 'selected' : ''; ?>>Gaming</option>
-                                    <option value="Design" <?php echo $product['category'] == 'Design' ? 'selected' : ''; ?>>Design</option>
+                                </select>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Section</label>
+                                <select name="section" class="form-hound-control">
+                                    <option value="New Arrivals" <?php echo ($product['section'] ?? '') == 'New Arrivals' ? 'selected' : ''; ?>>New Arrivals</option>
+                                    <option value="Hot Deals" <?php echo ($product['section'] ?? '') == 'Hot Deals' ? 'selected' : ''; ?>>Hot Deals</option>
+                                    <option value="Limited Stock" <?php echo ($product['section'] ?? '') == 'Limited Stock' ? 'selected' : ''; ?>>Limited Stock</option>
+                                    <option value="Coming Soon" <?php echo ($product['section'] ?? '') == 'Coming Soon' ? 'selected' : ''; ?>>Coming Soon</option>
+                                    <option value="Special Offers" <?php echo ($product['section'] ?? '') == 'Special Offers' ? 'selected' : ''; ?>>Special Offers</option>
                                 </select>
                             </div>
 

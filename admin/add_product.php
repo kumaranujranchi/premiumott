@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reviews = $_POST['reviews'] ?: 0;
     $discount_percent = $_POST['discount_percent'];
     $category = $_POST['category'];
+    $section = $_POST['section'];
     $license_type = $_POST['license_type'];
     $icon = $_POST['icon'];
     $color = $_POST['color'];
@@ -33,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, license_type, icon, color, image, currency, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $license_type, $icon, $color, $image, $currency, $is_active]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, tagline, description, original_price, discounted_price, rating, reviews, discount_percent, category, section, license_type, icon, color, image, currency, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $tagline, $description, $original_price, $discounted_price, $rating, $reviews, $discount_percent, $category, $section, $license_type, $icon, $color, $image, $currency, $is_active]);
         $productId = $pdo->lastInsertId();
         $stmt = $pdo->prepare("INSERT INTO product_features (product_id, feature_text) VALUES (?, ?)");
         foreach ($features as $feature) {
@@ -115,11 +116,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-hound-group">
                                 <label>Category</label>
                                 <select name="category" class="form-hound-control">
+                                    <option value="SaaS">SaaS</option>
+                                    <option value="Operating System">Operating System</option>
+                                    <option value="Social Media">Social Media</option>
+                                    <option value="SEO">SEO</option>
+                                    <option value="Automation">Automation</option>
+                                    <option value="Hosting">Hosting</option>
+                                    <option value="Domain">Domain</option>
                                     <option value="Streaming">Streaming</option>
                                     <option value="Education">Education</option>
-                                    <option value="Productivity">Productivity</option>
                                     <option value="Gaming">Gaming</option>
-                                    <option value="Design">Design</option>
+                                </select>
+                            </div>
+
+                            <div class="form-hound-group">
+                                <label>Section</label>
+                                <select name="section" class="form-hound-control">
+                                    <option value="New Arrivals">New Arrivals</option>
+                                    <option value="Hot Deals">Hot Deals</option>
+                                    <option value="Limited Stock">Limited Stock</option>
+                                    <option value="Coming Soon">Coming Soon</option>
+                                    <option value="Special Offers">Special Offers</option>
                                 </select>
                             </div>
 

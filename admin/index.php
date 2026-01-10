@@ -81,6 +81,7 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                                     <th>Image</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
+                                    <th>Section</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th style="text-align: right;">Actions</th>
@@ -111,6 +112,9 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                                         </td>
                                         <td><span
                                                 style="font-size: 13px;"><?php echo htmlspecialchars($p['category']); ?></span>
+                                        </td>
+                                        <td><span
+                                                style="font-size: 13px;"><?php echo htmlspecialchars($p['section'] ?? 'New Arrivals'); ?></span>
                                         </td>
                                         <td>
                                             <div style="font-weight: 700;">

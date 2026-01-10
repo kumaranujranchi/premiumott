@@ -45,6 +45,19 @@
 
             <nav class="nav" id="mainNav">
                 <a href="index.php" class="nav-link">Software Deals</a>
+                <div class="nav-item-dropdown">
+                    <span class="nav-link dropdown-trigger">Categories <i data-lucide="chevron-down"
+                            style="width: 14px; height: 14px; margin-left: 4px;"></i></span>
+                    <div class="dropdown-menu">
+                        <a href="index.php?category=SaaS" class="dropdown-item">SaaS</a>
+                        <a href="index.php?category=Operating System" class="dropdown-item">Operating System</a>
+                        <a href="index.php?category=Social Media" class="dropdown-item">Social Media</a>
+                        <a href="index.php?category=SEO" class="dropdown-item">SEO</a>
+                        <a href="index.php?category=Automation" class="dropdown-item">Automation</a>
+                        <a href="index.php?category=Hosting" class="dropdown-item">Hosting</a>
+                        <a href="index.php?category=Domain" class="dropdown-item">Domain</a>
+                    </div>
+                </div>
                 <a href="index.php#deals" class="nav-link">Lifetime Licenses</a>
                 <a href="index.php#how-it-works" class="nav-link">How it Works</a>
                 <a href="#" class="nav-link mobile-only">Support</a>
