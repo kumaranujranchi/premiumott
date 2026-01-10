@@ -1,9 +1,9 @@
 <?php
 // Database configuration
 $host = "localhost";
-$db_name = "ott_db";
-$username = "root";
-$password = "";
+$db_name = "u743570205_premiumott";
+$username = "u743570205_premiumott";
+$password = "Anuj@2025@2026";
 
 try {
     $pdo = new PDO("mysql:host=" . $host . ";dbname=" . $db_name, $username, $password);
