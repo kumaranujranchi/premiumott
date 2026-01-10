@@ -69,6 +69,9 @@
 
         <div class="footer-bottom">
             <p>&copy; <?php echo date('Y'); ?> Premium OTT Store. All rights reserved.</p>
+            <p style="margin-top: 10px;">Designed and Maintained by <a href="https://synergybrandarchitect.in/"
+                    target="_blank" rel="noopener noreferrer" style="color: #6366f1; text-decoration: none;">Synergy
+                    Brand Architect</a></p>
             <div class="footer-legal">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
