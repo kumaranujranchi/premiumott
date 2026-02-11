@@ -2,8 +2,21 @@
 include 'includes/db.php';
 include 'includes/header.php';
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$product = getProduct($pdo, $id);
+$order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
+$order = null;
+
+if ($order_id) {
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE id = ?");
+    $stmt->execute([$order_id]);
+    $order = $stmt->fetch();
+}
+
+if (!$order) {
+    echo "Invalid Order ID";
+    exit;
+}
+
+$product = getProduct($pdo, $order['product_id']);
 
 if (!$product) {
     echo '<div class="container" style="padding: 100px 20px; text-align: center;">
@@ -17,6 +30,11 @@ if (!$product) {
           </div>';
     include 'includes/footer.php';
     exit;
+}
+
+// Auto-refresh if Pending
+if ($order['status'] == 'Pending') {
+    header("Refresh: 10");
 }
 
 $orderNumber = 'ORD-' . strtoupper(dechex(time())) . strtoupper(substr(md5(rand()), 0, 4));
@@ -49,12 +67,25 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
         </div>
 
         <div class="confirmation-hero">
-            <div class="conf-icon-box">
-                <i data-lucide="shield-check"></i>
+            <div class="conf-icon-box"
+                style="<?php echo $order['status'] == 'Pending' ? 'background: #FFB300;' : ''; ?>">
+                <?php if ($order['status'] == 'Pending'): ?>
+                    <i data-lucide="loader-2" class="spin-icon"></i>
+                <?php else: ?>
+                    <i data-lucide="shield-check"></i>
+                <?php endif; ?>
             </div>
-            <h1>Order Confirmed!</h1>
-            <p>Your order for <strong><?php echo $product['name']; ?></strong> has been received and is now being
-                processed.</p>
+
+            <?php if ($order['status'] == 'Pending'): ?>
+                <h1>Payment Verifying...</h1>
+                <p>We are verifying your transaction ID
+                    <strong><?php echo htmlspecialchars($order['transaction_id']); ?></strong>. <br>Please wait, this page
+                    will auto-refresh.
+                </p>
+            <?php else: ?>
+                <h1>Order Confirmed!</h1>
+                <p>Your order for <strong><?php echo $product['name']; ?></strong> has been successfully processed.</p>
+            <?php endif; ?>
         </div>
 
         <div class="order-summary-card">
@@ -63,9 +94,11 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                     <span class="label">Order Number</span>
                     <span class="value"><?php echo $orderNumber; ?></span>
                 </div>
-                <div class="status-pill-hound">
-                    <span class="pulse-dot"></span>
-                    Processing
+                <div class="status-pill-hound"
+                    style="<?php echo $order['status'] == 'Pending' ? 'background: rgba(255, 179, 0, 0.1); color: #F57F17;' : 'background: rgba(46, 125, 50, 0.1); color: #2E7D32;'; ?>">
+                    <span class="pulse-dot"
+                        style="<?php echo $order['status'] == 'Pending' ? 'background: #F57F17;' : 'background: #2E7D32;'; ?>"></span>
+                    <?php echo $order['status']; ?>
                 </div>
             </div>
 

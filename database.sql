@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS orders (
     customer_whatsapp VARCHAR(20),
     requirements TEXT,
     total_amount DECIMAL(10, 2),
+    transaction_id VARCHAR(50),
     status ENUM('Pending', 'Processed', 'Cancelled') DEFAULT 'Pending',
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)

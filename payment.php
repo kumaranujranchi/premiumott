@@ -50,61 +50,72 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
             <!-- Left: Payment Form -->
             <div class="payment-form-card">
                 <div class="card-header-premium">
-                    <i data-lucide="lock" class="header-icon"></i>
-                    <h2>Secure Checkout</h2>
+                    <i data-lucide="scan-line" class="header-icon"></i>
+                    <h2>Scan & Pay</h2>
                 </div>
 
-                <form class="checkout-form-premium"
-                    onsubmit="event.preventDefault(); window.location.href='details.php?id=<?php echo $id; ?>';">
-                    <div class="form-section-hound">
-                        <label><i data-lucide="user"></i> Cardholder Name</label>
-                        <div class="premium-input-box">
-                            <input type="text" placeholder="John Smith" required />
-                        </div>
+                <div class="qr-payment-section" style="text-align: center; margin-bottom: 20px;">
+                    <!-- DYNAMIC QR CODE -->
+                    <!-- REPLACE 'yourupi@okaxis' WITH YOUR ACTUAL UPI ID -->
+                    <?php
+                    $upi_id = "yourupi@okaxis";
+                    $payee_name = "PremiumOTT";
+                    $amount = $product['discounted_price'];
+                    $note = "Order " . $product['id']; // Or some unique order ref if available before logic
+                    
+                    // UPI URL Format: upi://pay?pa=UPI_ID&pn=NAME&am=AMOUNT&tn=NOTE
+                    $upi_url = "upi://pay?pa={$upi_id}&pn={$payee_name}&am={$amount}&tn={$note}";
+                    $qr_api = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($upi_url);
+                    ?>
+
+                    <div class="qr-container"
+                        style="background: white; padding: 10px; display: inline-block; border-radius: 10px;">
+                        <img src="<?php echo $qr_api; ?>" alt="Scan to Pay" style="width: 200px; height: 200px;">
                     </div>
+
+                    <p style="margin-top: 10px; font-size: 14px; color: var(--text-dim);">
+                        Scan with any UPI App (GPay, PhonePe, Paytm)
+                    </p>
+                    <div style="font-size: 18px; font-weight: 700; color: var(--primary); margin-top: 5px;">
+                        Amount: <?php echo $symbol . $amount; ?>
+                    </div>
+                </div>
+
+                <form class="checkout-form-premium" action="process_order.php" method="POST">
+                    <input type="hidden" name="product_id" value="<?php echo $id; ?>">
 
                     <div class="form-section-hound">
-                        <label><i data-lucide="credit-card"></i> Card Number</label>
+                        <label><i data-lucide="user"></i> Your Name</label>
                         <div class="premium-input-box">
-                            <input type="text" placeholder="0000 0000 0000 0000" required />
-                            <div class="card-brands">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-                                    alt="Visa">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-                                    alt="Mastercard">
-                            </div>
+                            <input type="text" name="name" placeholder="John Doe" required />
                         </div>
                     </div>
 
-                    <div class="form-row-hound">
-                        <div class="form-section-hound">
-                            <label>Expiry Date</label>
-                            <div class="premium-input-box">
-                                <input type="text" placeholder="MM/YY" required />
-                            </div>
-                        </div>
-                        <div class="form-section-hound">
-                            <label>CVC / CVV</label>
-                            <div class="premium-input-box">
-                                <input type="text" placeholder="123" required />
-                            </div>
+                    <div class="form-section-hound">
+                        <label><i data-lucide="mail"></i> Email Address</label>
+                        <div class="premium-input-box">
+                            <input type="email" name="email" placeholder="john@example.com" required />
                         </div>
                     </div>
 
-                    <div class="payment-badges-row">
-                        <div class="secure-badge-hound">
-                            <i data-lucide="shield-check"></i>
-                            <span>256-bit SSL Encrypted</span>
+                    <div class="form-section-hound"
+                        style="background: rgba(var(--primary-rgb), 0.1); padding: 15px; border-radius: 8px; border: 1px dashed var(--primary);">
+                        <label style="color: var(--primary); font-weight: 700;"><i data-lucide="hash"></i> Transaction
+                            ID / UTR / Ref No</label>
+                        <div class="premium-input-box">
+                            <input type="text" name="transaction_id" placeholder="Enter the 12-digit UTR from SMS/App"
+                                required style="font-weight: bold; letter-spacing: 1px;"
+                                messages="Please enter valid UTR" pattern="\d{12,}"
+                                title="Please enter valid 12 digit UTR number" />
                         </div>
-                        <div class="secure-badge-hound">
-                            <i data-lucide="lock"></i>
-                            <span>Secure Payment Gateway</span>
-                        </div>
+                        <small style="display: block; margin-top: 5px; color: var(--text-dim); font-size: 11px;">
+                            IMPORTANT: Enter the correct UTR number from your payment SMS/App to get instant access.
+                        </small>
                     </div>
 
-                    <button type="submit" class="submit-pay-btn">
-                        <span>Pay <?php echo $symbol; ?><?php echo $product['discounted_price']; ?> Now</span>
-                        <i data-lucide="chevron-right"></i>
+                    <button type="submit" class="submit-pay-btn" style="margin-top: 20px;">
+                        <span>Verify & Complete Order</span>
+                        <i data-lucide="check-circle"></i>
                     </button>
 
                     <p class="safe-note">By clicking, you agree to our Terms and 30-day money-back guarantee.</p>
