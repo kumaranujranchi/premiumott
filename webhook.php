@@ -1,10 +1,12 @@
 <?php
 include 'includes/db.php';
 
-// SECURITY: Change this to a hard-to-guess secret!
+include 'includes/config.php';
+
+// SECURITY: Change this to a hard-to-guess secret in includes/config.php!
 // You will put this same secret in your SMS Forwarder App URL
 // Example: https://yourwebsite.com/webhook.php?secret=MY_SECURE_KEY
-$secret_key = "MY_SECURE_KEY";
+$secret_key = $webhook_secret;
 
 if (!isset($_GET['secret']) || $_GET['secret'] !== $secret_key) {
     http_response_code(403);
