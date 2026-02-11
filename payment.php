@@ -81,20 +81,41 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                     </div>
                 </div>
 
+                <?php
+                // Fetch existing order details if order_id is present
+                $order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
+                $prefill_name = '';
+                $prefill_email = '';
+
+                if ($order_id) {
+                    $stmt = $pdo->prepare("SELECT customer_name, customer_email FROM orders WHERE id = ?");
+                    $stmt->execute([$order_id]);
+                    $existing_order = $stmt->fetch();
+                    if ($existing_order) {
+                        $prefill_name = $existing_order['customer_name'];
+                        $prefill_email = $existing_order['customer_email'];
+                    }
+                }
+                ?>
+
                 <form class="checkout-form-premium" action="process_order.php" method="POST">
                     <input type="hidden" name="product_id" value="<?php echo $id; ?>">
+                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                    <!-- We pass order_id so process_order.php knows to UPDATE instead of INSERT -->
 
                     <div class="form-section-hound">
                         <label><i data-lucide="user"></i> Your Name</label>
                         <div class="premium-input-box">
-                            <input type="text" name="name" placeholder="John Doe" required />
+                            <input type="text" name="name" placeholder="John Doe"
+                                value="<?php echo htmlspecialchars($prefill_name); ?>" required <?php echo $prefill_name ? 'readonly' : ''; ?> />
                         </div>
                     </div>
 
                     <div class="form-section-hound">
                         <label><i data-lucide="mail"></i> Email Address</label>
                         <div class="premium-input-box">
-                            <input type="email" name="email" placeholder="john@example.com" required />
+                            <input type="email" name="email" placeholder="john@example.com"
+                                value="<?php echo htmlspecialchars($prefill_email); ?>" required <?php echo $prefill_email ? 'readonly' : ''; ?> />
                         </div>
                     </div>
 

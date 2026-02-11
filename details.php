@@ -30,7 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, customer_whatsapp, requirements, total_amount) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([$id, $name, $email, $whatsapp, $requirements, $product['discounted_price']]);
 
-    header("Location: confirmation.php?id=" . $id);
+    $new_order_id = $pdo->lastInsertId();
+
+    // Redirect to PAYMENT PAGE with the new Order ID
+    header("Location: payment.php?id=" . $id . "&order_id=" . $new_order_id);
     exit;
 }
 ?>
