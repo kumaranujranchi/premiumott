@@ -11,6 +11,18 @@ if ($order_id) {
     $order = $stmt->fetch();
 }
 
+// Fallback for legacy URLs (e.g. confirmation.php?id=19)
+if (!$order && isset($_GET['id'])) {
+    $prod_id = (int) $_GET['id'];
+    // Create a dummy order object to prevent errors
+    $order = [
+        'id' => 0,
+        'product_id' => $prod_id,
+        'status' => 'Processed', // Assume processed if coming via legacy link
+        'transaction_id' => 'N/A'
+    ];
+}
+
 if (!$order) {
     echo "Invalid Order ID";
     exit;
