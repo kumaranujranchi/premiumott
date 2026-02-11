@@ -15,12 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $amount = $product['discounted_price'];
 
-    // 2. Insert Order (Pending)
-    $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, total_amount, status, transaction_id) VALUES (?, ?, ?, ?, 'Pending', ?)");
-    $stmt->execute([$product_id, $name, $email, $amount, $utr]);
+    // 2. Insert or Update Order
+    $order_id = isset($_POST['order_id']) ? (int) $_POST['order_id'] : 0;
 
-    // 3. Redirect to Confirmation (or check_status)
-    $order_id = $pdo->lastInsertId();
+    if ($order_id > 0) {
+        // UPDATE existing order with Transaction ID
+        $stmt = $pdo->prepare("UPDATE orders SET transaction_id = ?, status = 'Pending' WHERE id = ?");
+        $stmt->execute([$utr, $order_id]);
+    } else {
+        // Fallback: INSERT new Order (if for some reason user came directly to payment.php)
+        $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, total_amount, status, transaction_id) VALUES (?, ?, ?, ?, 'Pending', ?)");
+        $stmt->execute([$product_id, $name, $email, $amount, $utr]);
+        $order_id = $pdo->lastInsertId();
+    }
+
+    // 3. Redirect to Confirmation
     header("Location: confirmation.php?order_id=" . $order_id);
     exit;
 }
