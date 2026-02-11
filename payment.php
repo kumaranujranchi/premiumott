@@ -58,8 +58,13 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                     <!-- DYNAMIC QR CODE -->
                     <!-- REPLACE 'yourupi@okaxis' WITH YOUR ACTUAL UPI ID -->
                     <?php
-                    $upi_id = "yourupi@okaxis";
-                    $payee_name = "PremiumOTT";
+                    include_once 'includes/config.php';
+
+                    // Fallback if config is missing or empty
+                    if (empty($upi_id) || $upi_id == "your-upi-id-here@okaxis") {
+                        $upi_id = "demo@okaxis"; // Demo ID to prevent "Invalid QR" error on first load
+                    }
+
                     $amount = $product['discounted_price'];
                     $note = "Order " . $product['id']; // Or some unique order ref if available before logic
                     
