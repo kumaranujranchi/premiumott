@@ -20,9 +20,9 @@ include_once 'includes/config.php';
 $order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
 $amount   = $product['discounted_price'];
 $note     = 'PremiumOTT-' . $order_id;
-$upi_url  = "upi://pay?pa={$upi_id}&pn=" . rawurlencode($payee_name) . "&am={$amount}&tn=" . rawurlencode($note) . "&cu=INR";
-// Google Charts QR — server-rendered image, no JS library needed
-$qr_src   = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" . rawurlencode($upi_url) . "&choe=UTF-8&chld=H|1";
+$upi_url  = "upi://pay?pa={$upi_id}&pn=" . urlencode($payee_name) . "&am={$amount}&tn=" . urlencode($note) . "&cu=INR";
+// qrserver.com — same API that worked in the original version
+$qr_src   = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=" . urlencode($upi_url) . "&ecc=H&margin=1";
 
 $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 ?>
@@ -303,10 +303,9 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
             <div class="qr-frame">
                 <img src="<?php echo htmlspecialchars($qr_src); ?>"
                      alt="UPI QR Code"
-                     width="260" height="260"
-                     style="border-radius:6px;"
-                     onerror="this.parentElement.innerHTML='<div style=\'width:260px;height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#666;font-size:13px;gap:8px;\'><span style=\'font-size:36px;\'>⚠️</span><span>QR not available<br>Use UPI ID below</span></div>'">
-                <div class="qr-logo-overlay">💰</div>
+                     width="280" height="280"
+                     style="border-radius:6px;display:block;"
+                     onerror="this.outerHTML='<div style=&quot;width:280px;height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#999;font-size:13px;gap:10px;&quot;><span style=&quot;font-size:40px;&quot;>⚠️</span><span style=&quot;text-align:center;&quot;>QR unavailable<br>Use UPI ID below</span></div>'">
             </div>
             <div style="margin-top:6px;">
                 <div class="upi-id-row">
