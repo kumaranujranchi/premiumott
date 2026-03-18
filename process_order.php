@@ -2,35 +2,38 @@
 include 'includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id = $_POST['product_id'];
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $utr = trim($_POST['transaction_id']);
+    $product_id     = (int)   ($_POST['product_id']      ?? 0);
+    $order_id       = (int)   ($_POST['order_id']        ?? 0);
+    $utr            = trim(    $_POST['transaction_id']  ?? '');
+    $upi_payer      = trim(    $_POST['upi_payer_name']  ?? '');
+    $amount_entered = (float) ($_POST['amount_entered']  ?? 0);
 
-    // 1. Validate Product
     $product = getProduct($pdo, $product_id);
     if (!$product) {
-        die("Invalid Product");
+        die('Invalid Product');
     }
 
-    $amount = $product['discounted_price'];
-
-    // 2. Insert or Update Order
-    $order_id = isset($_POST['order_id']) ? (int) $_POST['order_id'] : 0;
-
     if ($order_id > 0) {
-        // UPDATE existing order with Transaction ID
-        $stmt = $pdo->prepare("UPDATE orders SET transaction_id = ?, status = 'Pending' WHERE id = ?");
-        $stmt->execute([$utr, $order_id]);
+        $stmt = $pdo->prepare("
+            UPDATE orders
+            SET transaction_id = ?, upi_payer_name = ?, amount_entered = ?, status = 'Pending'
+            WHERE id = ?
+        ");
+        $stmt->execute([$utr, $upi_payer, $amount_entered, $order_id]);
     } else {
-        // Fallback: INSERT new Order (if for some reason user came directly to payment.php)
-        $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, total_amount, status, transaction_id) VALUES (?, ?, ?, ?, 'Pending', ?)");
-        $stmt->execute([$product_id, $name, $email, $amount, $utr]);
+        // Fallback: user arrived directly at payment page
+        $name  = trim($_POST['name']  ?? 'Customer');
+        $email = trim($_POST['email'] ?? '');
+        $stmt  = $pdo->prepare("
+            INSERT INTO orders
+                (product_id, customer_name, customer_email, total_amount, status, transaction_id, upi_payer_name, amount_entered)
+            VALUES (?, ?, ?, ?, 'Pending', ?, ?, ?)
+        ");
+        $stmt->execute([$product_id, $name, $email, $product['discounted_price'], $utr, $upi_payer, $amount_entered]);
         $order_id = $pdo->lastInsertId();
     }
 
-    // 3. Redirect to Confirmation
-    header("Location: confirmation.php?order_id=" . $order_id);
+    header('Location: confirmation.php?order_id=' . $order_id);
     exit;
 }
 ?>

@@ -93,7 +93,8 @@ $stats = [
                                     <th>Product</th>
                                     <th>Customer</th>
                                     <th>WhatsApp</th>
-                                    <th>Status</th>
+                                        <th>Payment / UTR</th>
+                                        <th>Status</th>
                                     <th style="text-align: right;">Action</th>
                                 </tr>
                             </thead>
@@ -139,17 +140,36 @@ $stats = [
                                                 <?php echo $o['status']; ?>
                                             </span>
                                         </td>
-                                        <td style="text-align: right;">
-                                            <?php if (strtolower($o['status']) == 'pending'): ?>
-                                                <a href="?id=<?php echo $o['id']; ?>&status=Processed"
-                                                    class="btn-hound btn-hound-primary"
-                                                    style="padding: 6px 12px; font-size: 11px;">
-                                                    <span>Deliver</span>
-                                                </a>
-                                            <?php else: ?>
-                                                <i data-lucide="check-circle-2" style="color: #2E7D32; width: 18px;"></i>
-                                            <?php endif; ?>
-                                        </td>
+                                            <td>
+                                                <?php if (!empty($o['transaction_id'])): ?>
+                                                    <div style="font-family:'Courier New',monospace; font-size:12px; font-weight:800; color:var(--primary); background:rgba(61,254,2,0.07); border:1px solid rgba(61,254,2,0.2); border-radius:5px; padding:3px 8px; display:inline-block; margin-bottom:4px;">
+                                                        <?php echo htmlspecialchars($o['transaction_id']); ?>
+                                                    </div><br>
+                                                <?php else: ?>
+                                                    <span style="color:var(--text-dim); font-size:12px;">—</span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($o['upi_payer_name'])): ?>
+                                                    <div style="font-size:12px; color:var(--text-dim); margin-top:2px;"><?php echo htmlspecialchars($o['upi_payer_name']); ?></div>
+                                                <?php endif; ?>
+                                                <?php if (!empty($o['amount_entered'])): ?>
+                                                    <div style="font-size:11px; font-weight:700; color:#FFB300; margin-top:2px;">Paid: <?php echo ($o['currency'] == 'INR' ? '₹' : '$') . number_format((float)$o['amount_entered'], 2); ?></div>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <?php if (strtolower($o['status']) == 'pending'): ?>
+                                                    <a href="?id=<?php echo $o['id']; ?>&status=Processed"
+                                                       class="btn-hound btn-hound-primary"
+                                                       style="padding:7px 14px; font-size:11px; background:#2E7D32; display:inline-flex; align-items:center; gap:5px;"
+                                                       onclick="return confirm('Approve payment for Order #<?php echo $o['id']; ?>?')">
+                                                        <i data-lucide="check-circle" style="width:13px;height:13px;"></i>
+                                                        <span>Approve</span>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <div style="display:flex; align-items:center; gap:5px; justify-content:flex-end; color:#2E7D32; font-size:12px; font-weight:700;">
+                                                        <i data-lucide="check-circle-2" style="width:16px;"></i> Approved
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

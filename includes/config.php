@@ -2,10 +2,7 @@
 // Configuration File
 
 // 1. Payment Settings
-// Enter your UPI ID here (e.g., specific-shop@okicici, 9876543210@paytm)
-$upi_id = "your-upi-id-here@okaxis";
-
-// Payee Name (Appears in payment apps)
+$upi_id    = "abhisheksha2828@okhdfcbank";
 $payee_name = "Premium OTT Store";
 
 // 2. Security
