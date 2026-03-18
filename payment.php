@@ -32,7 +32,6 @@ $order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
 $amount   = $product['discounted_price'];
 $note     = urlencode('PremiumOTT Order #' . $order_id);
 $upi_url  = "upi://pay?pa={$upi_id}&pn=" . urlencode($payee_name) . "&am={$amount}&tn={$note}&cu=INR";
-$qr_url   = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . urlencode($upi_url);
 ?>
 
 <style>
@@ -79,9 +78,12 @@ $qr_url   = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . u
 /* QR section */
 .qr-box {
     background: #fff; border-radius: 12px;
-    padding: 12px; display: inline-block;
-    box-shadow: 0 2px 16px rgba(0,0,0,.4);
+    padding: 14px; display: inline-flex;
+    align-items: center; justify-content: center;
+    box-shadow: 0 2px 20px rgba(0,0,0,.5);
+    margin: 0 auto;
 }
+.qr-box canvas, .qr-box img { display: block; }
 .upi-id-copy {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--bg-tertiary); border: 1px solid var(--border);
@@ -188,7 +190,7 @@ $qr_url   = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . u
                     </div>
                     <div class="pay-card-body" style="text-align:center;">
                         <div class="qr-box">
-                            <img src="<?php echo $qr_url; ?>" alt="UPI QR Code" width="220" height="220">
+                            <div id="qrcode"></div>
                         </div>
                         <div class="amount-tag">
                             <i data-lucide="indian-rupee" style="width:20px;height:20px;"></i>
@@ -307,7 +309,16 @@ $qr_url   = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . u
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 <script>
+new QRCode(document.getElementById('qrcode'), {
+    text: <?php echo json_encode($upi_url); ?>,
+    width: 220,
+    height: 220,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+});
 lucide.createIcons();
 function copyUPI() {
     const txt = document.getElementById('upiIdText').textContent;
