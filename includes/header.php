@@ -133,6 +133,10 @@ if (!function_exists('isUserLoggedIn')) {
                             <span class="user-dropdown-email"><?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
                         </div>
                         <div class="user-dropdown-divider"></div>
+                        <a href="profile.php" class="user-dropdown-item">
+                            <i data-lucide="user-circle" style="width: 15px; height: 15px;"></i>
+                            <span>My Profile</span>
+                        </a>
                         <a href="logout.php" class="user-dropdown-item logout-item">
                             <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
                             <span>Sign Out</span>
