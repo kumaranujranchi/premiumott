@@ -49,4 +49,4 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- Default admin: admin@premiumott.com / Admin@123
-INSERT INTO admins (email, password) VALUES ('admin@premiumott.com', '$2y$10$iI0T7Q.fWp.fKk7fK/L0e.hC5U0P.kX1K.K/K.K.K/K.K.K/K.K.K');
+INSERT IGNORE INTO admins (email, password) VALUES ('admin@premiumott.com', '$2y$10$iI0T7Q.fWp.fKk7fK/L0e.hC5U0P.kX1K.K/K.K.K/K.K.K/K.K.K');

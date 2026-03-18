@@ -10,8 +10,8 @@ $product = getProduct($pdo, $id);
 $postError = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $product) {
-    $name         = trim($_POST['name']         ?? '');
-    $email        = trim($_POST['email']        ?? '');
+    $name         = $_SESSION['user_name']  ?? 'Customer';
+    $email        = $_SESSION['user_email'] ?? '';
     $whatsapp     = trim($_POST['whatsapp']     ?? '');
     $requirements = trim($_POST['requirements'] ?? '');
 
@@ -125,23 +125,14 @@ if ($postError) {
 
             <form method="POST" class="premium-form">
                 <div class="form-grid-2">
-                    <?php
-                    $sessionName  = $_SESSION['user_name']  ?? '';
-                    $sessionEmail = $_SESSION['user_email'] ?? '';
-                    ?>
-                    <div class="form-group-premium">
-                        <label><i data-lucide="user"></i> Full Name *</label>
-                        <div class="input-wrapper">
-                            <input type="text" name="name" placeholder="John Smith" required value="<?php echo htmlspecialchars($sessionName); ?>" />
+                    <div style="grid-column: 1 / -1; background: var(--bg-secondary); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px;">
+                            <?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?>
                         </div>
-                    </div>
-
-                    <div class="form-group-premium">
-                        <label><i data-lucide="mail"></i> Email Address *</label>
-                        <div class="input-wrapper">
-                            <input type="email" name="email" placeholder="you@example.com" required value="<?php echo htmlspecialchars($sessionEmail); ?>" readonly style="background: var(--bg-tertiary); cursor: not-allowed; opacity: 0.8;" />
+                        <div>
+                            <p style="margin: 0; font-weight: 700; font-size: 14px; color: var(--text-primary);">Ordering as <?php echo htmlspecialchars($_SESSION['user_name']); ?></p>
+                            <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-muted);"><?php echo htmlspecialchars($_SESSION['user_email']); ?></p>
                         </div>
-                        <span class="input-hint">Order will be linked to your account: <?php echo htmlspecialchars($sessionEmail); ?></span>
                     </div>
 
                     <div class="form-group-premium">
