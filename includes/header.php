@@ -33,6 +33,19 @@ if (!function_exists('isUserLoggedIn')) {
     <meta name="twitter:description" content="Access your favorite streaming platforms without the high monthly costs.">
     <meta name="twitter:image" content="https://premiumott.com/assets/img/logo.png">
     <style>
+        /* ----- Header Layout Fix ----- */
+        .header-content {
+            gap: 16px !important;
+        }
+        .nav {
+            gap: 20px !important;
+            flex-shrink: 1;
+        }
+        .header-actions {
+            flex-shrink: 0;
+            gap: 10px !important;
+            white-space: nowrap;
+        }
         /* ----- User Auth Header Styles ----- */
         .header-login-btn {
             display: inline-flex; align-items: center; gap: 6px;
@@ -99,10 +112,8 @@ if (!function_exists('isUserLoggedIn')) {
                 <a href="index.php?category=SaaS" class="nav-link">SaaS</a>
                 <a href="index.php?category=Operating System" class="nav-link">Operating System</a>
                 <a href="index.php?category=Social Media" class="nav-link">Social Media</a>
-                <a href="index.php?category=SEO" class="nav-link">SEO</a>
                 <a href="index.php?category=Automation" class="nav-link">Automation</a>
                 <a href="index.php?category=Hosting" class="nav-link">Hosting</a>
-                <a href="index.php?category=Domain" class="nav-link">Domain</a>
             </nav>
 
             <div class="header-actions">
