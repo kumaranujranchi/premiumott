@@ -2,16 +2,18 @@
 include 'includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id     = (int)   ($_POST['product_id']      ?? 0);
-    $order_id       = (int)   ($_POST['order_id']        ?? 0);
-    $utr            = trim(    $_POST['transaction_id']  ?? '');
-    $upi_payer      = trim(    $_POST['upi_payer_name']  ?? '');
-    $amount_entered = (float) ($_POST['amount_entered']  ?? 0);
+    $product_id = (int)  ($_POST['product_id'] ?? 0);
+    $order_id   = (int)  ($_POST['order_id']   ?? 0);
+    $utr        = trim(   $_POST['transaction_id']  ?? '');
+    $upi_payer  = trim(   $_POST['upi_payer_name']  ?? '');
 
     $product = getProduct($pdo, $product_id);
     if (!$product) {
         die('Invalid Product');
     }
+
+    // Always use the real product price — never trust user-submitted amount
+    $amount_entered = (float) $product['discounted_price'];
 
     if ($order_id > 0) {
         $stmt = $pdo->prepare("

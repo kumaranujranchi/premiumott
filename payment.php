@@ -307,14 +307,7 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
                      style="border-radius:6px;display:block;"
                      onerror="this.outerHTML='<div style=&quot;width:280px;height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#999;font-size:13px;gap:10px;&quot;><span style=&quot;font-size:40px;&quot;>⚠️</span><span style=&quot;text-align:center;&quot;>QR unavailable<br>Use UPI ID below</span></div>'">
             </div>
-            <div style="margin-top:6px;">
-                <div class="upi-id-row">
-                    <span id="upiIdText"><?php echo htmlspecialchars($upi_id); ?></span>
-                    <button class="upi-copy-btn" onclick="copyUPI()">
-                        <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy
-                    </button>
-                </div>
-            </div>
+
             <div class="upi-apps-row">
                 <span class="upi-app-tag">📱 GPay</span>
                 <span class="upi-app-tag">📱 PhonePe</span>
@@ -371,13 +364,6 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
                         required autocomplete="name">
                 </div>
 
-                <div class="pf-field">
-                    <label>Amount Paid (₹) *</label>
-                    <input type="number" name="amount_entered"
-                        value="<?php echo (int)$amount; ?>"
-                        step="1" min="1" required>
-                </div>
-
                 <button type="submit" class="pf-submit">
                     <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
                     <span>Confirm &amp; Submit</span>
@@ -391,20 +377,6 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 
 <script>
 lucide.createIcons();
-function copyUPI() {
-    const txt = document.getElementById('upiIdText').textContent.trim();
-    navigator.clipboard.writeText(txt).then(function() {
-        const btn = document.querySelector('.upi-copy-btn');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '✓ Copied!';
-        btn.style.background = 'rgba(61,254,2,0.2)';
-        setTimeout(function() {
-            btn.innerHTML = orig;
-            btn.style.background = '';
-            lucide.createIcons();
-        }, 2000);
-    });
-}
 </script>
 
 <?php include 'includes/footer.php'; ?>
