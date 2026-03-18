@@ -161,7 +161,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                         </label>
 
                         <?php
-                        $detailsUrl = 'details.php?id=' . $product['id'];
+                        $detailsUrl = 'payment.php?id=' . $product['id'];
                         $proceedUrl = isUserLoggedIn() ? $detailsUrl : ('login.php?redirect=' . urlencode($detailsUrl));
                         ?>
                         <button id="proceedBtn" class="proceed-btn-hound disabled" disabled

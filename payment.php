@@ -1,5 +1,7 @@
 <?php
 include 'includes/db.php';
+include 'includes/user_auth.php';
+requireUserLogin();
 include 'includes/header.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -222,7 +224,7 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
     text-transform: uppercase; letter-spacing: .5px;
     margin-bottom: 7px;
 }
-.pf-field input {
+.pf-field input, .pf-field textarea {
     width: 100%;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
@@ -233,7 +235,8 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
     outline: none;
     transition: border-color .2s, background .2s;
 }
-.pf-field input:focus { border-color: var(--primary); background: rgba(61,254,2,.03); }
+.pf-field textarea { resize: vertical; min-height: 80px; }
+.pf-field input:focus, .pf-field textarea:focus { border-color: var(--primary); background: rgba(61,254,2,.03); }
 .pf-field.utr-field input {
     font-family: 'Courier New', monospace;
     font-size: 16px; font-weight: 700;
@@ -266,25 +269,20 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 
 <div class="pay-wrap">
 
-    <!-- 4-step progress -->
+    <!-- 3-step progress -->
     <div class="pay-progress">
         <div class="pp-step done">
             <div class="pp-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
             <span>Selection</span>
         </div>
         <div class="pp-line done"></div>
-        <div class="pp-step done">
-            <div class="pp-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
-            <span>Details</span>
-        </div>
-        <div class="pp-line done"></div>
         <div class="pp-step curr">
-            <div class="pp-dot">3</div>
+            <div class="pp-dot">2</div>
             <span>Payment</span>
         </div>
         <div class="pp-line"></div>
         <div class="pp-step">
-            <div class="pp-dot">4</div>
+            <div class="pp-dot">3</div>
             <span>Access</span>
         </div>
     </div>
@@ -359,13 +357,24 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
         <div class="pay-form-section">
             <div class="pay-form-title">
                 <i data-lucide="check-circle-2" style="width:18px;height:18px;color:var(--primary);"></i>
-                Confirm Payment
+                Your Details & Payment
             </div>
-            <div class="pay-form-sub">After paying, fill in details from your UPI app to confirm your order.</div>
+            <div class="pay-form-sub">Please provide your delivery info and confirm your UPI payment details below.</div>
 
             <form action="process_order.php" method="POST">
                 <input type="hidden" name="product_id" value="<?php echo $id; ?>">
                 <input type="hidden" name="order_id"   value="<?php echo $order_id; ?>">
+
+                <div class="pf-field">
+                    <label>WhatsApp Number *</label>
+                    <input type="tel" name="whatsapp" placeholder="+91 91234 56789" required autocomplete="tel">
+                    <div class="pf-hint">Our team will contact you for delivery</div>
+                </div>
+
+                <div class="pf-field">
+                    <label>Special Requirements</label>
+                    <textarea name="requirements" placeholder="e.g. Preferred email for activation, company name, etc." rows="3"></textarea>
+                </div>
 
                 <div class="pf-field utr-field">
                     <label>UTR Number *</label>
