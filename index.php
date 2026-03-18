@@ -108,12 +108,15 @@ $currencyMap = [
                         <?php else: ?>
                             <?php foreach ($filteredProducts as $product):
                                 $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+                                // Resolve image path and check file existence to avoid broken images
+                                $imagePath = $product['image'] ?? '';
+                                $hasImage = $imagePath && file_exists(__DIR__ . '/' . ltrim($imagePath, '/'));
                                 ?>
                                 <div class="product-card">
                                     <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
-                                    <?php if (!empty($product['image'])): ?>
+                                    <?php if ($hasImage): ?>
                                         <div class="product-banner">
-                                            <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                                            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"
                                                 style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
                                         </div>
                                     <?php else: ?>
@@ -182,12 +185,15 @@ $currencyMap = [
                         <div class="products-grid">
                             <?php foreach ($sectionProducts as $product):
                                 $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+                                // Resolve image path and check file existence to avoid broken images
+                                $imagePath = $product['image'] ?? '';
+                                $hasImage = $imagePath && file_exists(__DIR__ . '/' . ltrim($imagePath, '/'));
                                 ?>
                                 <div class="product-card">
                                     <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
-                                    <?php if (!empty($product['image'])): ?>
+                                    <?php if ($hasImage): ?>
                                         <div class="product-banner">
-                                            <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>"
+                                            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"
                                                 style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
                                         </div>
                                     <?php else: ?>
