@@ -160,13 +160,21 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 .upi-copy-btn:hover { opacity: .8; }
 .upi-apps-row {
     display: flex; align-items: center; justify-content: center;
-    gap: 8px; margin-top: 14px; flex-wrap: wrap;
+    gap: 16px; margin-top: 18px; flex-wrap: wrap;
 }
-.upi-app-tag {
-    font-size: 12px; font-weight: 600;
-    padding: 4px 12px; border-radius: 20px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
+.upi-app-logo {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.upi-app-logo img {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    object-fit: contain;
+    background: #fff;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.upi-app-logo span {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
 }
 
 /* ── How to pay steps ── */
@@ -309,10 +317,22 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
             </div>
 
             <div class="upi-apps-row">
-                <span class="upi-app-tag">📱 GPay</span>
-                <span class="upi-app-tag">📱 PhonePe</span>
-                <span class="upi-app-tag">📱 Paytm</span>
-                <span class="upi-app-tag">📱 BHIM</span>
+                <div class="upi-app-logo">
+                    <img src="https://img.icons8.com/color/96/google-pay-india.png" alt="GPay">
+                    <span>GPay</span>
+                </div>
+                <div class="upi-app-logo">
+                    <img src="https://img.icons8.com/color/96/phonepe.png" alt="PhonePe">
+                    <span>PhonePe</span>
+                </div>
+                <div class="upi-app-logo">
+                    <img src="https://img.icons8.com/color/96/paytm.png" alt="Paytm">
+                    <span>Paytm</span>
+                </div>
+                <div class="upi-app-logo">
+                    <img src="https://img.icons8.com/color/96/bhim.png" alt="BHIM">
+                    <span>BHIM</span>
+                </div>
             </div>
         </div>
 
