@@ -356,12 +356,12 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
                 <input type="hidden" name="order_id"   value="<?php echo $order_id; ?>">
 
                 <div class="pf-field utr-field">
-                    <label>UTR / Transaction ID *</label>
+                    <label>UTR Number *</label>
                     <input type="text" name="transaction_id"
                         placeholder="12-digit UTR e.g. 425612345678"
                         pattern="\d{12,}" title="Enter the 12-digit UTR number"
                         required autocomplete="off">
-                    <div class="pf-hint">UPI app → Transaction history → UTR / Ref No.</div>
+                    <div class="pf-hint">UPI app → Transaction History → UTR No.</div>
                 </div>
 
                 <div class="pf-field">
