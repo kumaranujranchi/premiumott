@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header('Location: confirmation.php?order_id=' . $order_id);
+    header('Location: confirmation?order_id=' . $order_id);
     exit;
 }
 ?>

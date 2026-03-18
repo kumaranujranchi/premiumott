@@ -11,13 +11,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <div class="sidebar-menu">
         <div class="menu-section">
             <span class="menu-label">Main</span>
-            <a href="index.php" class="menu-item <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">
+            <a href="index" class="menu-item <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">
                 <i data-lucide="layout-grid"></i> Dashboard
             </a>
-            <a href="orders.php" class="menu-item <?php echo $current_page == 'orders.php' ? 'active' : ''; ?>">
+            <a href="orders" class="menu-item <?php echo $current_page == 'orders.php' ? 'active' : ''; ?>">
                 <i data-lucide="shopping-bag"></i> Orders
             </a>
-            <a href="add_product.php"
+            <a href="add_product"
                 class="menu-item <?php echo $current_page == 'add_product.php' ? 'active' : ''; ?>">
                 <i data-lucide="plus-circle"></i> Add Product
             </a>

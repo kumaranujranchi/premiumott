@@ -14,7 +14,7 @@ $user = $stmt->fetch();
 
 if (!$user) {
     session_destroy();
-    header('Location: login.php');
+    header('Location: login');
     exit;
 }
 
@@ -299,7 +299,7 @@ $initials    = strtoupper(substr($user['name'], 0, 1));
                             <i data-lucide="package-open"></i>
                             <p style="font-weight:700;font-size:16px;margin-bottom:6px;">No orders yet</p>
                             <p style="font-size:14px;margin-bottom:20px;">You haven't purchased anything yet.</p>
-                            <a href="index.php" class="btn-primary" style="display:inline-flex;">
+                            <a href="index" class="btn-primary" style="display:inline-flex;">
                                 <span>Browse Deals</span>
                                 <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
                             </a>

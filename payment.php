@@ -11,7 +11,7 @@ if (!$product) {
     echo '<div class="container" style="padding:100px 20px;text-align:center;">
             <div style="max-width:480px;margin:0 auto;padding:40px;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-lg);">
                 <h2 style="margin-bottom:20px;">Product not found</h2>
-                <a href="index.php" class="btn-primary"><span>Back to Home</span></a>
+                <a href="index" class="btn-primary"><span>Back to Home</span></a>
             </div>
           </div>';
     include 'includes/footer.php';
@@ -361,7 +361,7 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
             </div>
             <div class="pay-form-sub">Please provide your delivery info and confirm your UPI payment details below.</div>
 
-            <form action="process_order.php" method="POST">
+            <form action="process_order" method="POST">
                 <input type="hidden" name="product_id" value="<?php echo $id; ?>">
                 <input type="hidden" name="order_id"   value="<?php echo $order_id; ?>">
 

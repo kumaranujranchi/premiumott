@@ -3,7 +3,7 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-brand">
-                <a href="index.php" class="footer-logo">
+                <a href="index" class="footer-logo">
                     <img src="assets/img/logo.png" alt="Premium OTT Store">
                 </a>
                 <p class="footer-desc">
@@ -21,11 +21,11 @@
             <div class="footer-links">
                 <h4>Marketplace</h4>
                 <div class="footer-links-list">
-                    <a href="index.php">Premium Deals</a>
+                    <a href="index">Premium Deals</a>
                     <a href="#">New Arrivals</a>
                     <a href="#">Success Stories</a>
                     <a href="#">Refer a Friend</a>
-                    <a href="admin/login.php">Admin Login</a>
+                    <a href="admin/login">Admin Login</a>
                 </div>
             </div>
 

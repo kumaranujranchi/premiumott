@@ -97,7 +97,7 @@ $currencyMap = [
                             <h2 class="section-title"><?php echo htmlspecialchars($title); ?></h2>
                             <p class="section-subtitle"><?php echo htmlspecialchars($subtitle); ?></p>
                         </div>
-                        <a href="index.php" class="view-all-link">
+                        <a href="index" class="view-all-link">
                             Clear Filter <i data-lucide="x" style="width: 16px; height: 16px;"></i>
                         </a>
                     </div>
@@ -143,7 +143,7 @@ $currencyMap = [
                                         </div>
                                         <span class="license-badge"><?php echo $product['license_type']; ?></span>
                                     </div>
-                                    <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
+                                    <a href="product?id=<?php echo $product['id']; ?>" class="view-deal-btn">
                                         <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                                     </a>
                                 </div>
@@ -178,7 +178,7 @@ $currencyMap = [
                                     ?>
                                 </p>
                             </div>
-                            <a href="index.php?section=<?php echo urlencode($section); ?>" class="view-all-link">View All <i
+                            <a href="index?section=<?php echo urlencode($section); ?>" class="view-all-link">View All <i
                                     data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
                         </div>
 
@@ -220,7 +220,7 @@ $currencyMap = [
                                         </div>
                                         <span class="license-badge"><?php echo $product['license_type']; ?></span>
                                     </div>
-                                    <a href="product.php?id=<?php echo $product['id']; ?>" class="view-deal-btn">
+                                    <a href="product?id=<?php echo $product['id']; ?>" class="view-deal-btn">
                                         <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                                     </a>
                                 </div>

@@ -12,5 +12,5 @@ if ($id) {
     }
 }
 
-header("Location: index.php");
+header("Location: index");
 exit;

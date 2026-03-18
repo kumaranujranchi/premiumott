@@ -11,7 +11,7 @@ if (!$product) {
             <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
                 <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
                 <h2 style="margin-bottom: 20px;">Product not found</h2>
-                <a href="index.php" class="btn-primary">
+                <a href="index" class="btn-primary">
                   <span>Back to Home</span>
                 </a>
             </div>
@@ -42,7 +42,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
 
 <div class="product-page">
     <div class="container">
-        <a href="index.php" class="back-link">
+        <a href="index" class="back-link">
             <i data-lucide="arrow-left"></i>
             <span>Back to all deals</span>
         </a>
@@ -162,7 +162,7 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
 
                         <?php
                         $detailsUrl = 'payment.php?id=' . $product['id'];
-                        $proceedUrl = isUserLoggedIn() ? $detailsUrl : ('login.php?redirect=' . urlencode($detailsUrl));
+                        $proceedUrl = isUserLoggedIn() ? $detailsUrl : ('login?redirect=' . urlencode($detailsUrl));
                         ?>
                         <button id="proceedBtn" class="proceed-btn-hound disabled" disabled
                             onclick="window.location.href='<?php echo $proceedUrl; ?>'">

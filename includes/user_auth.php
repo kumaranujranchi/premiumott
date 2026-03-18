@@ -25,7 +25,7 @@ function requireUserLogin(string $redirect = ''): void
             $redirect = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
                 . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         }
-        $loginUrl = '/login.php?redirect=' . urlencode($redirect);
+        $loginUrl = '/login?redirect=' . urlencode($redirect);
         header('Location: ' . $loginUrl);
         exit;
     }

@@ -5,7 +5,7 @@
     </div>
 
     <div class="nav-actions">
-        <a href="../index.php" class="nav-link" target="_blank"
+        <a href="../index" class="nav-link" target="_blank"
             style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; margin-right: 10px;">
             <i data-lucide="external-link" style="width: 16px;"></i> Go to Website
         </a>
@@ -16,7 +16,7 @@
                 style="background: var(--stat-red); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: #fff;">
                 A</div>
             <span style="font-size: 14px; font-weight: 600;">Admin</span>
-            <a href="logout.php" class="nav-link" style="margin-left: 10px;"><i data-lucide="log-out"
+            <a href="logout" class="nav-link" style="margin-left: 10px;"><i data-lucide="log-out"
                     style="width: 18px;"></i></a>
         </div>
     </div>

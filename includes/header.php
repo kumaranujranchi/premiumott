@@ -103,17 +103,17 @@ if (!function_exists('isUserLoggedIn')) {
     </div>
     <header class="header">
         <div class="container header-content">
-            <a href="index.php" class="logo">
+            <a href="index" class="logo">
                 <img src="assets/img/logo.png" alt="Premium OTT Store" style="height: 60px; width: auto;">
             </a>
 
             <nav class="nav" id="mainNav">
-                <a href="index.php" class="nav-link">All Products</a>
-                <a href="index.php?category=SaaS" class="nav-link">SaaS</a>
-                <a href="index.php?category=Operating System" class="nav-link">Operating System</a>
-                <a href="index.php?category=Social Media" class="nav-link">Social Media</a>
-                <a href="index.php?category=Automation" class="nav-link">Automation</a>
-                <a href="index.php?category=Hosting" class="nav-link">Hosting</a>
+                <a href="index" class="nav-link">All Products</a>
+                <a href="index?category=SaaS" class="nav-link">SaaS</a>
+                <a href="index?category=Operating System" class="nav-link">Operating System</a>
+                <a href="index?category=Social Media" class="nav-link">Social Media</a>
+                <a href="index?category=Automation" class="nav-link">Automation</a>
+                <a href="index?category=Hosting" class="nav-link">Hosting</a>
             </nav>
 
             <div class="header-actions">
@@ -133,11 +133,11 @@ if (!function_exists('isUserLoggedIn')) {
                             <span class="user-dropdown-email"><?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
                         </div>
                         <div class="user-dropdown-divider"></div>
-                        <a href="profile.php" class="user-dropdown-item">
+                        <a href="profile" class="user-dropdown-item">
                             <i data-lucide="user-circle" style="width: 15px; height: 15px;"></i>
                             <span>My Profile</span>
                         </a>
-                        <a href="logout.php" class="user-dropdown-item logout-item">
+                        <a href="logout" class="user-dropdown-item logout-item">
                             <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
                             <span>Sign Out</span>
                         </a>
@@ -145,11 +145,11 @@ if (!function_exists('isUserLoggedIn')) {
                 </div>
                 <?php else: ?>
                 <!-- Guest buttons -->
-                <a href="login.php" class="header-login-btn">
+                <a href="login" class="header-login-btn">
                     <i data-lucide="log-in" style="width: 16px; height: 16px;"></i>
                     <span>Sign In</span>
                 </a>
-                <a href="register.php" class="header-register-btn">
+                <a href="register" class="header-register-btn">
                     <span>Register</span>
                 </a>
                 <?php endif; ?>

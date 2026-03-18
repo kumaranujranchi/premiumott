@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$productId, trim($feature)]);
         }
         $pdo->commit();
-        header("Location: index.php");
+        header("Location: index");
         exit;
     } catch (Exception $e) {
         $pdo->rollBack();
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="hound-card" style="max-width: 800px; margin: 0 auto;">
                 <div class="card-header-hound">
                     <h3 class="card-title-hound">Create New Product</h3>
-                    <a href="index.php" class="btn-hound" style="background: rgba(255,255,255,0.05); color: #fff;">
+                    <a href="index" class="btn-hound" style="background: rgba(255,255,255,0.05); color: #fff;">
                         <i data-lucide="x" style="width: 16px;"></i> Cancel
                     </a>
                 </div>

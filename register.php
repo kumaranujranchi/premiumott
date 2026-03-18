@@ -4,13 +4,13 @@ include 'includes/user_auth.php';
 
 // Already logged in → go home
 if (isUserLoggedIn()) {
-    header('Location: index.php');
+    header('Location: index');
     exit;
 }
 
 $error = '';
 $success = '';
-$redirect = $_GET['redirect'] ?? 'index.php';
+$redirect = $_GET['redirect'] ?? 'index';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name     = trim($_POST['name']     ?? '');
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="auth-card">
         <div class="auth-logo">
-            <a href="index.php"><img src="assets/img/logo.png" alt="Premium OTT Store"></a>
+            <a href="index"><img src="assets/img/logo.png" alt="Premium OTT Store"></a>
         </div>
         <h2 class="auth-title">Create Your Account</h2>
         <p class="auth-subtitle">Join thousands of happy customers</p>
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="auth-error"><i data-lucide="alert-circle" style="width:14px;height:14px;display:inline;margin-right:6px;"></i><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="register.php?redirect=<?php echo urlencode($redirect); ?>">
+        <form method="POST" action="register?redirect=<?php echo urlencode($redirect); ?>">
             <div class="form-group">
                 <label><i data-lucide="user"></i> Full Name</label>
                 <input type="text" name="name" placeholder="John Smith" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="auth-footer">
-            Already have an account? <a href="login.php?redirect=<?php echo urlencode($redirect); ?>">Sign in</a>
+            Already have an account? <a href="login?redirect=<?php echo urlencode($redirect); ?>">Sign in</a>
         </div>
     </div>
     <script>lucide.createIcons();</script>

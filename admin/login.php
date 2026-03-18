@@ -3,7 +3,7 @@ session_start();
 include '../includes/db.php';
 
 if (isset($_SESSION['admin_id'])) {
-    header("Location: index.php");
+    header("Location: index");
     exit;
 }
 
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($admin && ($password === 'Admin@123' || password_verify($password, $admin['password']))) {
         $_SESSION['admin_id'] = $admin['id'];
         $_SESSION['admin_email'] = $admin['email'];
-        header("Location: index.php");
+        header("Location: index");
         exit;
     } else {
         $error = "Invalid email or password";

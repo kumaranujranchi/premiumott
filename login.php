@@ -4,12 +4,12 @@ include 'includes/user_auth.php';
 
 // Already logged in → go home
 if (isUserLoggedIn()) {
-    header('Location: index.php');
+    header('Location: index');
     exit;
 }
 
 $error    = '';
-$redirect = $_GET['redirect'] ?? 'index.php';
+$redirect = $_GET['redirect'] ?? 'index';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email']    ?? '');
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="auth-card">
         <div class="auth-logo">
-            <a href="index.php"><img src="assets/img/logo.png" alt="Premium OTT Store"></a>
+            <a href="index"><img src="assets/img/logo.png" alt="Premium OTT Store"></a>
         </div>
         <h2 class="auth-title">Welcome Back</h2>
         <p class="auth-subtitle">Sign in to access your deals</p>
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="auth-error"><i data-lucide="alert-circle" style="width:14px;height:14px;display:inline;margin-right:6px;"></i><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="login.php?redirect=<?php echo urlencode($redirect); ?>">
+        <form method="POST" action="login?redirect=<?php echo urlencode($redirect); ?>">
             <div class="form-group">
                 <label><i data-lucide="mail"></i> Email Address</label>
                 <input type="email" name="email" placeholder="you@example.com" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="auth-footer">
-            Don't have an account? <a href="register.php?redirect=<?php echo urlencode($redirect); ?>">Create one free</a>
+            Don't have an account? <a href="register?redirect=<?php echo urlencode($redirect); ?>">Create one free</a>
         </div>
     </div>
     <script>lucide.createIcons();</script>

@@ -36,7 +36,7 @@ if (!$product) {
             <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
                 <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
                 <h2 style="margin-bottom: 20px;">Product not found</h2>
-                <a href="index.php" class="btn-primary">
+                <a href="index" class="btn-primary">
                   <span>Back to Home</span>
                 </a>
             </div>
@@ -261,12 +261,12 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
         </div>
 
         <div class="confirmation-footer">
-            <a href="index.php" class="btn-primary browse-btn-lg">
+            <a href="index" class="btn-primary browse-btn-lg">
                 <span>Browse More Deals</span>
                 <i data-lucide="arrow-right"></i>
             </a>
             <?php if ($isPending): ?>
-            <a href="profile.php"
+            <a href="profile"
                style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-lg);border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-weight:600;font-size:14px;margin-left:12px;">
                 <i data-lucide="user" style="width:16px;height:16px;"></i>
                 <span>My Orders</span>

@@ -7,7 +7,7 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
     $status = $_GET['status'];
     $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
     $stmt->execute([$status, $id]);
-    header("Location: orders.php");
+    header("Location: orders");
     exit;
 }
 

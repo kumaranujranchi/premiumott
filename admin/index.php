@@ -69,7 +69,7 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
             <div class="hound-card">
                 <div class="card-header-hound">
                     <h3 class="card-title-hound">Manage Products</h3>
-                    <a href="add_product.php" class="btn-hound btn-hound-primary">
+                    <a href="add_product" class="btn-hound btn-hound-primary">
                         <i data-lucide="plus" style="width: 16px;"></i> <span>Add New</span>
                     </a>
                 </div>
@@ -130,10 +130,10 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                                         </td>
                                         <td style="text-align: right;">
                                             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                                <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="btn-hound"
+                                                <a href="edit_product?id=<?php echo $p['id']; ?>" class="btn-hound"
                                                     style="background: rgba(255,255,255,0.05); color: #fff; padding: 6px;"><i
                                                         data-lucide="edit-3" style="width: 16px;"></i></a>
-                                                <a href="delete_product.php?id=<?php echo $p['id']; ?>" class="btn-hound"
+                                                <a href="delete_product?id=<?php echo $p['id']; ?>" class="btn-hound"
                                                     style="background: rgba(244,67,54,0.1); color: #F44336; padding: 6px;"
                                                     onclick="return confirm('Delete this product?')"><i
                                                         data-lucide="trash-2" style="width: 16px;"></i></a>
