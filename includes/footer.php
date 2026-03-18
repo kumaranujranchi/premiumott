@@ -52,14 +52,14 @@
                     </p>
                     <div class="payment-methods">
                         <div class="pay-card"><img width="60" height="38"
-                                src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+                                src="https://img.icons8.com/color/96/visa.png" alt="Visa">
                         </div>
                         <div class="pay-card"><img width="60" height="38"
-                                src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"></div>
+                                src="https://img.icons8.com/color/96/mastercard.png" alt="Mastercard"></div>
                         <div class="pay-card"><img width="60" height="38"
-                                src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal"></div>
+                                src="https://img.icons8.com/color/96/paypal.png" alt="PayPal"></div>
                         <div class="pay-card"><img width="60" height="38"
-                                src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe"></div>
+                                src="https://img.icons8.com/color/96/stripe.png" alt="Stripe"></div>
                     </div>
                 </div>
             </div>
