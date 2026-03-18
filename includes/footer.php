@@ -51,17 +51,15 @@
                         Safe & secure payments via Stripe, PayPal, and major credit cards.
                     </p>
                     <div class="payment-methods">
-                        <div class="pay-card"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+                        <div class="pay-card"><img width="80" height="32"
+                                src="https://img.icons8.com/color/96/visa.png" alt="Visa">
                         </div>
-                        <div class="pay-card"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-                                alt="Mastercard"></div>
-                        <div class="pay-card"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
-                                alt="PayPal"></div>
-                        <div class="pay-card"><img
-                                src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg"
-                                alt="Stripe"></div>
+                        <div class="pay-card"><img width="80" height="32"
+                                src="https://img.icons8.com/color/96/mastercard.png" alt="Mastercard"></div>
+                        <div class="pay-card"><img width="80" height="32"
+                                src="https://img.icons8.com/color/96/paypal.png" alt="PayPal"></div>
+                        <div class="pay-card"><img width="80" height="32"
+                                src="https://img.icons8.com/color/96/stripe.png" alt="Stripe"></div>
                     </div>
                 </div>
             </div>
