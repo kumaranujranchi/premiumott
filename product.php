@@ -1,5 +1,6 @@
 <?php
 include 'includes/db.php';
+include 'includes/user_auth.php';
 include 'includes/header.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -159,9 +160,13 @@ $symbol = $currencyMap[$product['currency'] ?? 'USD'];
                             <span class="check-label">I understand the delivery process</span>
                         </label>
 
+                        <?php
+                        $detailsUrl = 'details.php?id=' . $product['id'];
+                        $proceedUrl = isUserLoggedIn() ? $detailsUrl : ('login.php?redirect=' . urlencode($detailsUrl));
+                        ?>
                         <button id="proceedBtn" class="proceed-btn-hound disabled" disabled
-                            onclick="window.location.href='details.php?id=<?php echo $product['id']; ?>'">
-                            <span>Proceed to Payment</span>
+                            onclick="window.location.href='<?php echo $proceedUrl; ?>'">
+                            <span><?php echo isUserLoggedIn() ? 'Proceed to Payment' : 'Login to Proceed'; ?></span>
                             <i data-lucide="chevron-right"></i>
                         </button>
 

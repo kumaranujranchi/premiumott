@@ -1,5 +1,7 @@
 <?php
 include 'includes/db.php';
+include 'includes/user_auth.php';
+requireUserLogin();
 include 'includes/header.php';
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;

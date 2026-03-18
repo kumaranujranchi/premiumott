@@ -1,3 +1,8 @@
+<?php
+if (!function_exists('isUserLoggedIn')) {
+    include_once __DIR__ . '/user_auth.php';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +32,52 @@
     <meta name="twitter:title" content="Premium OTT Store - Lifetime Digital Deals">
     <meta name="twitter:description" content="Access your favorite streaming platforms without the high monthly costs.">
     <meta name="twitter:image" content="https://premiumott.com/assets/img/logo.png">
+    <style>
+        /* ----- User Auth Header Styles ----- */
+        .header-login-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--text-secondary); font-size: 14px; font-weight: 600;
+            padding: 8px 14px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); transition: all .2s;
+        }
+        .header-login-btn:hover { color: var(--primary); border-color: var(--primary); }
+        .header-register-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--primary); color: #000; font-size: 14px; font-weight: 700;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: opacity .2s;
+        }
+        .header-register-btn:hover { opacity: .88; }
+        /* User dropdown */
+        .user-menu-wrap { position: relative; }
+        .user-menu-btn {
+            display: flex; align-items: center; gap: 7px;
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-primary); font-size: 14px; font-weight: 600;
+            padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer;
+            transition: border-color .2s;
+        }
+        .user-menu-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .user-menu-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .user-dropdown {
+            display: none; position: absolute; top: calc(100% + 8px); right: 0;
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: var(--radius-md); min-width: 220px;
+            padding: 8px; box-shadow: var(--shadow-lg); z-index: 999;
+        }
+        .user-dropdown.open { display: block; }
+        .user-dropdown-info { padding: 10px 12px 8px; }
+        .user-dropdown-name { display: block; font-weight: 700; font-size: 14px; color: var(--text-primary); }
+        .user-dropdown-email { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; word-break: break-all; }
+        .user-dropdown-divider { height: 1px; background: var(--border); margin: 6px 0; }
+        .user-dropdown-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            transition: all .15s;
+        }
+        .user-dropdown-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .logout-item:hover { color: var(--danger); }
+    </style>
 </head>
 
 <body>
@@ -56,9 +107,38 @@
 
             <div class="header-actions">
                 <a href="#" class="nav-link support-link">Support</a>
-                <button class="cart-btn">
-                    <i data-lucide="shopping-cart" style="width: 20px; height: 20px;"></i>
-                </button>
+
+                <?php if (isUserLoggedIn()): ?>
+                <!-- Logged-in user dropdown -->
+                <div class="user-menu-wrap">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <i data-lucide="user-circle" style="width: 22px; height: 22px;"></i>
+                        <span class="user-menu-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-info">
+                            <span class="user-dropdown-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+                            <span class="user-dropdown-email"><?php echo htmlspecialchars($_SESSION['user_email']); ?></span>
+                        </div>
+                        <div class="user-dropdown-divider"></div>
+                        <a href="logout.php" class="user-dropdown-item logout-item">
+                            <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </div>
+                </div>
+                <?php else: ?>
+                <!-- Guest buttons -->
+                <a href="login.php" class="header-login-btn">
+                    <i data-lucide="log-in" style="width: 16px; height: 16px;"></i>
+                    <span>Sign In</span>
+                </a>
+                <a href="register.php" class="header-register-btn">
+                    <span>Register</span>
+                </a>
+                <?php endif; ?>
+
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i data-lucide="menu" id="menuIcon" style="width: 24px; height: 24px;"></i>
                 </button>
