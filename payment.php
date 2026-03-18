@@ -317,19 +317,19 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 
             <div class="upi-apps-row">
                 <div class="upi-app-logo">
-                    <div class="upi-app-icon" style="background:#fff;color:#000;">G</div>
+                    <img src="https://img.icons8.com/color/96/google-pay.png" alt="GPay" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
                     <span>GPay</span>
                 </div>
                 <div class="upi-app-logo">
-                    <div class="upi-app-icon" style="background:#00bfa5; color:#fff;">P</div>
+                    <img src="https://img.icons8.com/color/96/phonepe.png" alt="PhonePe" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
                     <span>PhonePe</span>
                 </div>
                 <div class="upi-app-logo">
-                    <div class="upi-app-icon" style="background:#2863f8; color:#fff;">P</div>
+                    <img src="https://img.icons8.com/color/96/paytm.png" alt="Paytm" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
                     <span>Paytm</span>
                 </div>
                 <div class="upi-app-logo">
-                    <div class="upi-app-icon" style="background:#2c3338; color:#fff;">B</div>
+                    <img src="https://img.icons8.com/color/96/bhim.png" alt="BHIM" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
                     <span>BHIM</span>
                 </div>
             </div>
