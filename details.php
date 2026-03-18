@@ -23,20 +23,62 @@ if (!$product) {
 
 $success = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $whatsapp = $_POST['whatsapp'];
-    $requirements = $_POST['requirements'];
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $whatsapp = trim($_POST['whatsapp'] ?? '');
+    $requirements = trim($_POST['requirements'] ?? '');
 
-    // Save to database
-    $stmt = $pdo->prepare("INSERT INTO orders (product_id, customer_name, customer_email, customer_whatsapp, requirements, total_amount) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$id, $name, $email, $whatsapp, $requirements, $product['discounted_price']]);
+    try {
+        $columnsStmt = $pdo->query("SHOW COLUMNS FROM orders");
+        $availableColumns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-    $new_order_id = $pdo->lastInsertId();
+        $orderData = [
+            'product_id' => $id,
+            'customer_name' => $name,
+            'customer_email' => $email,
+            'customer_whatsapp' => $whatsapp,
+            'requirements' => $requirements,
+            'total_amount' => $product['discounted_price'],
+            'status' => 'Pending'
+        ];
 
-    // Redirect to PAYMENT PAGE with the new Order ID
-    header("Location: payment.php?id=" . $id . "&order_id=" . $new_order_id);
-    exit;
+        $insertData = [];
+        foreach ($orderData as $column => $value) {
+            if (in_array($column, $availableColumns, true)) {
+                $insertData[$column] = $value;
+            }
+        }
+
+        if (!isset($insertData['product_id'], $insertData['customer_name'], $insertData['customer_email'])) {
+            throw new RuntimeException('Required order columns are missing from the database.');
+        }
+
+        $columnNames = array_keys($insertData);
+        $placeholders = implode(', ', array_fill(0, count($columnNames), '?'));
+        $sql = "INSERT INTO orders (" . implode(', ', $columnNames) . ") VALUES (" . $placeholders . ")";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(array_values($insertData));
+
+        $new_order_id = $pdo->lastInsertId();
+
+        header("Location: payment.php?id=" . $id . "&order_id=" . $new_order_id);
+        exit;
+    } catch (Throwable $e) {
+        echo '<div class="container" style="padding: 100px 20px; text-align: center;">
+                <div class="hound-card" style="max-width: 580px; margin: 0 auto; padding: 40px;">
+                    <i data-lucide="alert-triangle" style="width: 48px; height: 48px; color: #f59e0b; margin-bottom: 20px;"></i>
+                    <h2 style="margin-bottom: 16px;">Unable to continue to payment</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 24px;">There is a database mismatch on the live server. The order could not be created.</p>
+                    <p style="font-size: 13px; color: var(--text-muted); word-break: break-word; margin-bottom: 24px;">' . htmlspecialchars($e->getMessage()) . '</p>
+                    <a href="details.php?id=' . $id . '" class="btn-primary">
+                      <span>Try Again</span>
+                    </a>
+                </div>
+              </div>';
+        include 'includes/footer.php';
+        exit;
+    }
 }
 ?>
 
