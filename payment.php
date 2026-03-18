@@ -321,7 +321,7 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
                     <span>GPay</span>
                 </div>
                 <div class="upi-app-logo">
-                    <img src="https://img.icons8.com/color/96/phonepe.png" alt="PhonePe" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
+                    <img src="https://img.icons8.com/color/96/phone-pe.png" alt="PhonePe" width="44" height="44" class="upi-app-icon" style="background: #fff; padding: 4px; border-radius: 12px;">
                     <span>PhonePe</span>
                 </div>
                 <div class="upi-app-logo">
