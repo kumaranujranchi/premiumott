@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS orders (
     requirements TEXT,
     total_amount DECIMAL(10, 2),
     transaction_id VARCHAR(50),
+    upi_payer_name VARCHAR(255),
+    amount_entered DECIMAL(10, 2),
     status ENUM('Pending', 'Processed', 'Cancelled') DEFAULT 'Pending',
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)

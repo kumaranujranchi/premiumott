@@ -125,19 +125,23 @@ if ($postError) {
 
             <form method="POST" class="premium-form">
                 <div class="form-grid-2">
+                    <?php
+                    $sessionName  = $_SESSION['user_name']  ?? '';
+                    $sessionEmail = $_SESSION['user_email'] ?? '';
+                    ?>
                     <div class="form-group-premium">
                         <label><i data-lucide="user"></i> Full Name *</label>
                         <div class="input-wrapper">
-                            <input type="text" name="name" placeholder="John Smith" required />
+                            <input type="text" name="name" placeholder="John Smith" required value="<?php echo htmlspecialchars($sessionName); ?>" />
                         </div>
                     </div>
 
                     <div class="form-group-premium">
                         <label><i data-lucide="mail"></i> Email Address *</label>
                         <div class="input-wrapper">
-                            <input type="email" name="email" placeholder="you@example.com" required />
+                            <input type="email" name="email" placeholder="you@example.com" required value="<?php echo htmlspecialchars($sessionEmail); ?>" readonly style="background: var(--bg-tertiary); cursor: not-allowed; opacity: 0.8;" />
                         </div>
-                        <span class="input-hint">Order updates will be sent here</span>
+                        <span class="input-hint">Order will be linked to your account: <?php echo htmlspecialchars($sessionEmail); ?></span>
                     </div>
 
                     <div class="form-group-premium">
