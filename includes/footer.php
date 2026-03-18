@@ -51,15 +51,15 @@
                         Safe & secure payments via Stripe, PayPal, and major credit cards.
                     </p>
                     <div class="payment-methods">
-                        <div class="pay-card"><img width="60" height="38"
-                                src="https://img.icons8.com/color/96/visa.png" alt="Visa">
+                        <div class="pay-card"><img width="70" height="44"
+                                src="https://img.icons8.com/color/96/visa.png" alt="Visa" style="background: #fff; padding: 4px; border-radius: 4px;">
                         </div>
-                        <div class="pay-card"><img width="60" height="38"
-                                src="https://img.icons8.com/color/96/mastercard.png" alt="Mastercard"></div>
-                        <div class="pay-card"><img width="60" height="38"
-                                src="https://img.icons8.com/color/96/paypal.png" alt="PayPal"></div>
-                        <div class="pay-card"><img width="60" height="38"
-                                src="https://img.icons8.com/color/96/stripe.png" alt="Stripe"></div>
+                        <div class="pay-card"><img width="70" height="44"
+                                src="https://img.icons8.com/color/96/mastercard.png" alt="Mastercard" style="background: #fff; padding: 4px; border-radius: 4px;"></div>
+                        <div class="pay-card"><img width="70" height="44"
+                                src="https://img.icons8.com/color/96/paypal.png" alt="PayPal" style="background: #fff; padding: 4px; border-radius: 4px;"></div>
+                        <div class="pay-card"><img width="70" height="44"
+                                src="https://img.icons8.com/color/96/stripe.png" alt="Stripe" style="background: #fff; padding: 4px; border-radius: 4px;"></div>
                     </div>
                 </div>
             </div>
@@ -67,9 +67,8 @@
 
         <div class="footer-bottom">
             <p>&copy; <?php echo date('Y'); ?> Premium OTT Store. All rights reserved.</p>
-            <p style="margin-top: 10px;">Designed and Maintained by <a href="https://synergybrandarchitect.in/"
-                    target="_blank" rel="noopener noreferrer" style="color: #3dfe02; text-decoration: none;">Synergy
-                    Brand Architect</a></p>
+            <p style="margin-top: 10px;">This site is running on <a href="https://siteonsub.com/"
+                    target="_blank" rel="noopener noreferrer" style="color: #3dfe02; text-decoration: none;">SiteOnSub</a></p>
             <div class="footer-legal">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
