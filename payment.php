@@ -6,328 +6,402 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $product = getProduct($pdo, $id);
 
 if (!$product) {
-    echo '<div class="container" style="padding: 100px 20px; text-align: center;">
-            <div class="hound-card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
-                <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--danger); margin-bottom: 20px;"></i>
-                <h2 style="margin-bottom: 20px;">Product not found</h2>
-                <a href="index.php" class="btn-primary">
-                  <span>Back to Home</span>
-                </a>
+    echo '<div class="container" style="padding:100px 20px;text-align:center;">
+            <div style="max-width:480px;margin:0 auto;padding:40px;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-lg);">
+                <h2 style="margin-bottom:20px;">Product not found</h2>
+                <a href="index.php" class="btn-primary"><span>Back to Home</span></a>
             </div>
           </div>';
     include 'includes/footer.php';
     exit;
 }
 
-$currencyMap = [
-    'USD' => '$',
-    'INR' => '₹'
-];
-$symbol = $currencyMap[$product['currency'] ?? 'USD'];
-?>
-
-<?php
 include_once 'includes/config.php';
 $order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
 $amount   = $product['discounted_price'];
-$note     = urlencode('PremiumOTT Order #' . $order_id);
-$upi_url  = "upi://pay?pa={$upi_id}&pn=" . urlencode($payee_name) . "&am={$amount}&tn={$note}&cu=INR";
+$note     = 'PremiumOTT-' . $order_id;
+$upi_url  = "upi://pay?pa={$upi_id}&pn=" . rawurlencode($payee_name) . "&am={$amount}&tn=" . rawurlencode($note) . "&cu=INR";
+// Google Charts QR — server-rendered image, no JS library needed
+$qr_src   = "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=" . rawurlencode($upi_url) . "&choe=UTF-8&chld=H|1";
+
+$symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
 ?>
 
 <style>
-/* ── Payment Page ───────────────────────────── */
-.pay-page { padding: 48px 0 80px; }
-.pay-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    align-items: start;
-    max-width: 960px;
-    margin: 0 auto;
+/* ─── Payment Page ──────────────────────────── */
+.pay-wrap {
+    min-height: 70vh;
+    padding: 40px 0 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-/* Steps */
-.pay-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
-.pay-step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.pay-step-dot {
-    width: 34px; height: 34px; border-radius: 50%;
+
+/* ── Steps bar ── */
+.pay-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 36px;
+    width: 100%;
+    max-width: 500px;
+}
+.pp-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.pp-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 800;
-    background: var(--bg-tertiary); border: 2px solid var(--border); color: var(--text-muted);
+    font-size: 12px; font-weight: 800;
+    border: 2px solid var(--border);
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
 }
-.pay-step.done .pay-step-dot  { background: var(--primary); border-color: var(--primary); color: #000; }
-.pay-step.curr .pay-step-dot  { background: transparent; border-color: var(--primary); color: var(--primary); }
-.pay-step span { font-size: 12px; color: var(--text-muted); font-weight: 600; }
-.pay-step.done span, .pay-step.curr span { color: var(--text-secondary); }
-.pay-step-line { flex: 1; height: 2px; background: var(--border); min-width: 40px; max-width: 80px; margin-bottom: 20px; }
-.pay-step-line.done { background: var(--primary); }
-/* Cards */
-.pay-card {
-    background: var(--bg-primary); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); overflow: hidden;
+.pp-step.done .pp-dot { background: var(--primary); border-color: var(--primary); color: #000; }
+.pp-step.curr .pp-dot { background: transparent; border-color: var(--primary); color: var(--primary); }
+.pp-step span { font-size: 11px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+.pp-step.done span, .pp-step.curr span { color: var(--text-secondary); }
+.pp-line { flex: 1; height: 2px; background: var(--border); min-width: 30px; max-width: 70px; margin-bottom: 18px; }
+.pp-line.done { background: var(--primary); }
+
+/* ── Main card ── */
+.pay-card-main {
+    width: 100%;
+    max-width: 560px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
 }
-.pay-card-head {
-    padding: 20px 24px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
+
+/* ── Product strip ── */
+.pay-product-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
 }
-.pay-card-head-icon {
-    width: 36px; height: 36px; border-radius: var(--radius-sm);
-    background: var(--primary-light); color: var(--primary);
-    display: flex; align-items: center; justify-content: center;
-}
-.pay-card-body { padding: 24px; }
-/* QR section */
-.qr-box {
-    background: #fff; border-radius: 12px;
-    padding: 14px; display: inline-flex;
-    align-items: center; justify-content: center;
-    box-shadow: 0 2px 20px rgba(0,0,0,.5);
-    margin: 0 auto;
-}
-.qr-box canvas, .qr-box img { display: block; }
-.upi-id-copy {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg-tertiary); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 16px;
-    font-size: 13px; font-weight: 700; letter-spacing: .3px;
-}
-.copy-btn {
-    background: none; border: none; color: var(--primary); cursor: pointer;
-    font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;
-}
-.copy-btn:hover { opacity: .8; }
-.amount-tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(61,254,2,.1); border: 1px solid rgba(61,254,2,.25);
-    color: var(--primary); font-size: 22px; font-weight: 800;
-    padding: 10px 20px; border-radius: var(--radius-md); margin-top: 16px;
-}
-.upi-apps { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-.upi-app-badge {
-    font-size: 11px; font-weight: 700; padding: 4px 10px;
-    border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted);
-}
-/* Confirm form */
-.cf-group { margin-bottom: 18px; }
-.cf-group label {
+.pay-product-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.pay-product-type { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.pay-amount-pill {
     display: flex; align-items: center; gap: 6px;
-    font-size: 12px; font-weight: 700; color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
+    background: rgba(61,254,2,.1);
+    border: 1px solid rgba(61,254,2,.3);
+    color: var(--primary);
+    font-size: 20px; font-weight: 900;
+    padding: 6px 16px;
+    border-radius: 50px;
+    flex-shrink: 0;
 }
-.cf-group input {
-    width: 100%; background: #1a1a1a; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); color: var(--text-primary);
-    font-size: 14px; font-family: inherit; padding: 12px 14px; outline: none;
-    transition: border-color .2s;
+
+/* ── QR section ── */
+.pay-qr-section {
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
 }
-.cf-group input:focus { border-color: var(--primary); }
-.cf-group.highlight input {
-    border-color: rgba(61,254,2,.4); background: rgba(61,254,2,.04);
-    font-weight: 700; letter-spacing: 1px;
+.pay-qr-label {
+    font-size: 18px; font-weight: 800; color: var(--text-primary);
+    margin-bottom: 6px;
 }
-.cf-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
-.cf-alert-row {
-    background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.2);
-    border-radius: var(--radius-sm); padding: 12px 14px;
-    display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px;
-    font-size: 13px; color: #F59E0B;
+.pay-qr-sub {
+    font-size: 13px; color: var(--text-muted);
+    margin-bottom: 24px;
 }
-/* Summary sidebar */
-.pay-summary { display: flex; flex-direction: column; gap: 16px; }
-.summary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
-.summary-row:last-child { border-bottom: none; }
-.summary-row.total { font-size: 17px; font-weight: 800; color: var(--text-primary); padding-top: 14px; }
-.summary-discount { color: var(--primary); }
-.guarantee-chip {
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(61,254,2,.06); border: 1px solid rgba(61,254,2,.15);
-    border-radius: var(--radius-md); padding: 14px 16px;
-    font-size: 13px; color: var(--text-secondary);
+.qr-frame {
+    display: inline-block;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 0 0 6px rgba(61,254,2,0.12), 0 8px 32px rgba(0,0,0,0.5);
+    position: relative;
 }
-@media (max-width: 768px) {
-    .pay-grid { grid-template-columns: 1fr; }
+.qr-frame img { display: block; border-radius: 6px; }
+.qr-logo-overlay {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px; height: 48px;
+    background: #fff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.upi-id-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-top: 20px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.3px;
+}
+.upi-copy-btn {
+    background: rgba(61,254,2,0.1);
+    border: 1px solid rgba(61,254,2,0.3);
+    color: var(--primary);
+    font-size: 12px; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; display: flex; align-items: center; gap: 4px;
+    transition: opacity .2s;
+}
+.upi-copy-btn:hover { opacity: .8; }
+.upi-apps-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 14px; flex-wrap: wrap;
+}
+.upi-app-tag {
+    font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+/* ── How to pay steps ── */
+.pay-how {
+    display: flex;
+    gap: 0;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+}
+.how-step {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: 0 8px; position: relative;
+}
+.how-step:not(:last-child)::after {
+    content: '';
+    position: absolute; right: 0; top: 16px;
+    width: 1px; height: 24px;
+    background: var(--border);
+}
+.how-num {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--primary); color: #000;
+    font-size: 13px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 6px;
+}
+.how-text { font-size: 11px; color: var(--text-muted); line-height: 1.4; font-weight: 500; }
+
+/* ── Confirm form ── */
+.pay-form-section { padding: 28px 24px; }
+.pay-form-title {
+    font-size: 16px; font-weight: 800; color: var(--text-primary);
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 8px;
+}
+.pay-form-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+
+.pf-field { margin-bottom: 16px; }
+.pf-field label {
+    display: block;
+    font-size: 12px; font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin-bottom: 7px;
+}
+.pf-field input {
+    width: 100%;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 15px; font-family: inherit;
+    padding: 13px 14px;
+    outline: none;
+    transition: border-color .2s, background .2s;
+}
+.pf-field input:focus { border-color: var(--primary); background: rgba(61,254,2,.03); }
+.pf-field.utr-field input {
+    font-family: 'Courier New', monospace;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 2px;
+    border-color: rgba(61,254,2,.35);
+    background: rgba(61,254,2,.04);
+}
+.pf-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+.pf-submit {
+    width: 100%; padding: 15px;
+    margin-top: 8px;
+    background: var(--primary); color: #000;
+    border: none; border-radius: var(--radius-md);
+    font-size: 16px; font-weight: 800;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity .2s;
+}
+.pf-submit:hover { opacity: .88; }
+.pf-note { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+
+@media (max-width: 600px) {
+    .pay-card-main { border-radius: 12px; margin: 0 12px; width: calc(100% - 24px); }
+    .pay-product-strip { padding: 14px 16px; }
+    .pay-qr-section { padding: 24px 16px 20px; }
+    .pay-form-section { padding: 22px 16px; }
+    .pay-how { padding: 16px 12px; }
 }
 </style>
 
-<div class="pay-page">
-    <div class="container">
+<div class="pay-wrap">
 
-        <!-- Progress steps -->
-        <div class="pay-steps">
-            <div class="pay-step done">
-                <div class="pay-step-dot"><i data-lucide="check" style="width:16px;height:16px;"></i></div>
-                <span>Selection</span>
+    <!-- 4-step progress -->
+    <div class="pay-progress">
+        <div class="pp-step done">
+            <div class="pp-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+            <span>Selection</span>
+        </div>
+        <div class="pp-line done"></div>
+        <div class="pp-step done">
+            <div class="pp-dot"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+            <span>Details</span>
+        </div>
+        <div class="pp-line done"></div>
+        <div class="pp-step curr">
+            <div class="pp-dot">3</div>
+            <span>Payment</span>
+        </div>
+        <div class="pp-line"></div>
+        <div class="pp-step">
+            <div class="pp-dot">4</div>
+            <span>Access</span>
+        </div>
+    </div>
+
+    <!-- Main card -->
+    <div class="pay-card-main">
+
+        <!-- Product strip -->
+        <div class="pay-product-strip">
+            <div>
+                <div class="pay-product-name"><?php echo htmlspecialchars($product['name']); ?></div>
+                <div class="pay-product-type"><?php echo htmlspecialchars($product['license_type']); ?></div>
             </div>
-            <div class="pay-step-line done"></div>
-            <div class="pay-step done">
-                <div class="pay-step-dot"><i data-lucide="check" style="width:16px;height:16px;"></i></div>
-                <span>Details</span>
-            </div>
-            <div class="pay-step-line done"></div>
-            <div class="pay-step curr">
-                <div class="pay-step-dot">3</div>
-                <span>Payment</span>
-            </div>
-            <div class="pay-step-line"></div>
-            <div class="pay-step">
-                <div class="pay-step-dot">4</div>
-                <span>Access</span>
+            <div class="pay-amount-pill">
+                <?php echo $symbol; ?><?php echo number_format((float)$amount, 0); ?>
             </div>
         </div>
 
-        <div class="pay-grid">
-
-            <!-- ── Left col: QR + Summary ── -->
-            <div style="display:flex;flex-direction:column;gap:20px;">
-
-                <!-- QR Code Card -->
-                <div class="pay-card">
-                    <div class="pay-card-head">
-                        <div class="pay-card-head-icon"><i data-lucide="scan-line" style="width:18px;height:18px;"></i></div>
-                        <div>
-                            <div style="font-weight:800;font-size:16px;">Scan & Pay via UPI</div>
-                            <div style="font-size:12px;color:var(--text-muted);">GPay · PhonePe · Paytm · Any UPI app</div>
-                        </div>
-                    </div>
-                    <div class="pay-card-body" style="text-align:center;">
-                        <div class="qr-box">
-                            <div id="qrcode"></div>
-                        </div>
-                        <div class="amount-tag">
-                            <i data-lucide="indian-rupee" style="width:20px;height:20px;"></i>
-                            <?php echo number_format($amount, 0); ?>
-                        </div>
-                        <div class="upi-id-copy">
-                            <span id="upiIdText"><?php echo htmlspecialchars($upi_id); ?></span>
-                            <button class="copy-btn" onclick="copyUPI()">
-                                <i data-lucide="copy" style="width:13px;height:13px;"></i> Copy
-                            </button>
-                        </div>
-                        <div class="upi-apps">
-                            <span class="upi-app-badge">📱 GPay</span>
-                            <span class="upi-app-badge">📱 PhonePe</span>
-                            <span class="upi-app-badge">📱 Paytm</span>
-                            <span class="upi-app-badge">📱 BHIM</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Order Summary -->
-                <div class="pay-card">
-                    <div class="pay-card-head">
-                        <div class="pay-card-head-icon"><i data-lucide="receipt" style="width:18px;height:18px;"></i></div>
-                        <div style="font-weight:800;font-size:16px;">Order Summary</div>
-                    </div>
-                    <div class="pay-card-body">
-                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
-                            <div style="width:42px;height:42px;border-radius:var(--radius-sm);background:<?php echo $product['color']; ?>18;display:flex;align-items:center;justify-content:center;">
-                                <i data-lucide="package" style="width:20px;height:20px;color:<?php echo $product['color']; ?>"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight:700;font-size:14px;"><?php echo htmlspecialchars($product['name']); ?></div>
-                                <div style="font-size:12px;color:var(--text-muted);"><?php echo htmlspecialchars($product['license_type']); ?></div>
-                            </div>
-                        </div>
-                        <div class="summary-row">
-                            <span>Original Price</span>
-                            <span><?php echo $symbol . number_format($product['original_price'], 0); ?></span>
-                        </div>
-                        <div class="summary-row summary-discount">
-                            <span>Discount (<?php echo $product['discount_percent']; ?>% OFF)</span>
-                            <span>− <?php echo $symbol . number_format($product['original_price'] - $product['discounted_price'], 0); ?></span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total Payable</span>
-                            <span><?php echo $symbol . number_format($product['discounted_price'], 0); ?></span>
-                        </div>
-                        <div class="guarantee-chip" style="margin-top:16px;">
-                            <i data-lucide="shield-check" style="width:20px;height:20px;color:var(--primary);flex-shrink:0;"></i>
-                            <span>30-Day Money Back Guarantee · 100% Secure</span>
-                        </div>
-                    </div>
+        <!-- QR Code section -->
+        <div class="pay-qr-section">
+            <div class="pay-qr-label">Scan QR to Pay ₹<?php echo number_format((float)$amount, 0); ?></div>
+            <div class="pay-qr-sub">Open any UPI app → Scan QR → Pay → Then fill details below</div>
+            <div class="qr-frame">
+                <img src="<?php echo htmlspecialchars($qr_src); ?>"
+                     alt="UPI QR Code"
+                     width="260" height="260"
+                     style="border-radius:6px;"
+                     onerror="this.parentElement.innerHTML='<div style=\'width:260px;height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#666;font-size:13px;gap:8px;\'><span style=\'font-size:36px;\'>⚠️</span><span>QR not available<br>Use UPI ID below</span></div>'">
+                <div class="qr-logo-overlay">💰</div>
+            </div>
+            <div style="margin-top:6px;">
+                <div class="upi-id-row">
+                    <span id="upiIdText"><?php echo htmlspecialchars($upi_id); ?></span>
+                    <button class="upi-copy-btn" onclick="copyUPI()">
+                        <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy
+                    </button>
                 </div>
             </div>
-
-            <!-- ── Right col: Confirm Payment Form ── -->
-            <div>
-                <div class="pay-card">
-                    <div class="pay-card-head">
-                        <div class="pay-card-head-icon"><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i></div>
-                        <div>
-                            <div style="font-weight:800;font-size:16px;">Confirm Your Payment</div>
-                            <div style="font-size:12px;color:var(--text-muted);">Fill in details after completing UPI payment</div>
-                        </div>
-                    </div>
-                    <div class="pay-card-body">
-
-                        <div class="cf-alert-row">
-                            <i data-lucide="alert-triangle" style="width:16px;height:16px;flex-shrink:0;margin-top:1px;"></i>
-                            <span>Complete the UPI payment first by scanning the QR code, then fill in the details below to confirm your order.</span>
-                        </div>
-
-                        <form action="process_order.php" method="POST">
-                            <input type="hidden" name="product_id" value="<?php echo $id; ?>">
-                            <input type="hidden" name="order_id"   value="<?php echo $order_id; ?>">
-
-                            <div class="cf-group highlight">
-                                <label><i data-lucide="hash" style="width:12px;height:12px;"></i> UTR / Transaction ID *</label>
-                                <input type="text" name="transaction_id"
-                                    placeholder="12-digit UTR from payment SMS or app"
-                                    pattern="\d{12,}" title="Enter the 12-digit UTR number"
-                                    required autocomplete="off">
-                                <div class="cf-hint">Find it in your UPI app → Transaction History → UTR / Ref No.</div>
-                            </div>
-
-                            <div class="cf-group">
-                                <label><i data-lucide="user" style="width:12px;height:12px;"></i> Name on UPI Account *</label>
-                                <input type="text" name="upi_payer_name"
-                                    placeholder="Name as shown in UPI app"
-                                    required autocomplete="name">
-                                <div class="cf-hint">Enter the name linked to the account you paid from.</div>
-                            </div>
-
-                            <div class="cf-group">
-                                <label><i data-lucide="indian-rupee" style="width:12px;height:12px;"></i> Amount Paid (₹) *</label>
-                                <input type="number" name="amount_entered"
-                                    value="<?php echo $product['discounted_price']; ?>"
-                                    step="1" min="1" required>
-                                <div class="cf-hint">Should match the exact amount shown on the QR code.</div>
-                            </div>
-
-                            <button type="submit" class="btn-primary" style="width:100%;padding:14px;margin-top:4px;">
-                                <span>Submit Payment Confirmation</span>
-                                <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
-                            </button>
-                            <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:12px;">
-                                By submitting, you agree to our Terms &amp; 30-day money-back policy.
-                            </p>
-                        </form>
-                    </div>
-                </div>
+            <div class="upi-apps-row">
+                <span class="upi-app-tag">📱 GPay</span>
+                <span class="upi-app-tag">📱 PhonePe</span>
+                <span class="upi-app-tag">📱 Paytm</span>
+                <span class="upi-app-tag">📱 BHIM</span>
             </div>
+        </div>
 
-        </div><!-- /pay-grid -->
-    </div>
+        <!-- How to pay steps -->
+        <div class="pay-how">
+            <div class="how-step">
+                <div class="how-num">1</div>
+                <div class="how-text">Open any<br>UPI app</div>
+            </div>
+            <div class="how-step">
+                <div class="how-num">2</div>
+                <div class="how-text">Scan QR &amp;<br>pay ₹<?php echo number_format((float)$amount, 0); ?></div>
+            </div>
+            <div class="how-step">
+                <div class="how-num">3</div>
+                <div class="how-text">Note UTR<br>number</div>
+            </div>
+            <div class="how-step">
+                <div class="how-num">4</div>
+                <div class="how-text">Fill form<br>below</div>
+            </div>
+        </div>
+
+        <!-- Confirmation form -->
+        <div class="pay-form-section">
+            <div class="pay-form-title">
+                <i data-lucide="check-circle-2" style="width:18px;height:18px;color:var(--primary);"></i>
+                Confirm Payment
+            </div>
+            <div class="pay-form-sub">After paying, fill in details from your UPI app to confirm your order.</div>
+
+            <form action="process_order.php" method="POST">
+                <input type="hidden" name="product_id" value="<?php echo $id; ?>">
+                <input type="hidden" name="order_id"   value="<?php echo $order_id; ?>">
+
+                <div class="pf-field utr-field">
+                    <label>UTR / Transaction ID *</label>
+                    <input type="text" name="transaction_id"
+                        placeholder="12-digit UTR e.g. 425612345678"
+                        pattern="\d{12,}" title="Enter the 12-digit UTR number"
+                        required autocomplete="off">
+                    <div class="pf-hint">UPI app → Transaction history → UTR / Ref No.</div>
+                </div>
+
+                <div class="pf-field">
+                    <label>Name on UPI Account *</label>
+                    <input type="text" name="upi_payer_name"
+                        placeholder="Name as shown in your UPI app"
+                        required autocomplete="name">
+                </div>
+
+                <div class="pf-field">
+                    <label>Amount Paid (₹) *</label>
+                    <input type="number" name="amount_entered"
+                        value="<?php echo (int)$amount; ?>"
+                        step="1" min="1" required>
+                </div>
+
+                <button type="submit" class="pf-submit">
+                    <i data-lucide="shield-check" style="width:18px;height:18px;"></i>
+                    <span>Confirm &amp; Submit</span>
+                </button>
+                <p class="pf-note">Secure · 256-bit encrypted · 30-day money-back guarantee</p>
+            </form>
+        </div>
+
+    </div><!-- /pay-card-main -->
 </div>
 
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 <script>
-new QRCode(document.getElementById('qrcode'), {
-    text: <?php echo json_encode($upi_url); ?>,
-    width: 220,
-    height: 220,
-    colorDark: '#000000',
-    colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.H
-});
 lucide.createIcons();
 function copyUPI() {
-    const txt = document.getElementById('upiIdText').textContent;
-    navigator.clipboard.writeText(txt).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.innerHTML = '<i data-lucide="check" style="width:13px;height:13px;"></i> Copied!';
-        lucide.createIcons();
-        setTimeout(() => {
-            btn.innerHTML = '<i data-lucide="copy" style="width:13px;height:13px;"></i> Copy';
+    const txt = document.getElementById('upiIdText').textContent.trim();
+    navigator.clipboard.writeText(txt).then(function() {
+        const btn = document.querySelector('.upi-copy-btn');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        btn.style.background = 'rgba(61,254,2,0.2)';
+        setTimeout(function() {
+            btn.innerHTML = orig;
+            btn.style.background = '';
             lucide.createIcons();
         }, 2000);
     });
