@@ -163,11 +163,9 @@ $currencyMap = [
                             continue;
                         $isFirst = ($sIdx === 0);
                         ?>
-                        <div style="margin-top: <?php echo $isFirst ? '0' : '12px'; ?>">
-                            <!-- Collapsible section header -->
-                            <div class="section-header js-section-toggle"
-                                 data-target="section-<?php echo $sIdx; ?>"
-                                 style="margin-top:0;">
+                        <div style="margin-top: <?php echo $isFirst ? '0' : '24px'; ?>">
+                            <!-- Section header -->
+                            <div class="section-header" style="margin-top:0;">
                                 <div>
                                     <h2 class="section-title"><?php echo $section; ?></h2>
                                     <p class="section-subtitle">
@@ -183,19 +181,13 @@ $currencyMap = [
                                         ?>
                                     </p>
                                 </div>
-                                <div style="display:flex;align-items:center;gap:10px;">
-                                    <a href="index?section=<?php echo urlencode($section); ?>" class="view-all-link"
-                                       onclick="event.stopPropagation()">View All <i
-                                            data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
-                                    <i data-lucide="chevron-down"
-                                       class="section-chevron <?php echo $isFirst ? 'open' : ''; ?>"
-                                       style="width:20px;height:20px;flex-shrink:0;"></i>
-                                </div>
+                                <a href="index?section=<?php echo urlencode($section); ?>" class="view-all-link">
+                                    View All <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                </a>
                             </div>
 
-                            <!-- Collapsible products grid -->
-                            <div class="products-grid-wrap <?php echo $isFirst ? 'open' : ''; ?>"
-                                 id="section-<?php echo $sIdx; ?>">
+                            <!-- Products horizontal scroll row -->
+                            <div class="products-grid-wrap open" id="section-<?php echo $sIdx; ?>">
                                 <div class="products-grid">
                                     <?php foreach ($sectionProducts as $product):
                                         $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
@@ -240,6 +232,13 @@ $currencyMap = [
                                     <?php endforeach; ?>
                                 </div>
                             </div><!-- /products-grid-wrap -->
+
+                            <!-- View More button -->
+                            <div class="section-view-more">
+                                <a href="index?section=<?php echo urlencode($section); ?>">
+                                    View More <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+                                </a>
+                            </div>
                         </div>
                         <?php
                     }
@@ -306,18 +305,3 @@ $currencyMap = [
         <span><?php echo isUserLoggedIn() ? 'Profile' : 'Sign In'; ?></span>
     </a>
 </nav>
-
-<script>
-// Collapsible section accordion
-document.querySelectorAll('.js-section-toggle').forEach(function(header) {
-    header.addEventListener('click', function() {
-        var targetId = this.getAttribute('data-target');
-        var wrap     = document.getElementById(targetId);
-        var chevron  = this.querySelector('.section-chevron');
-        if (!wrap) return;
-        var isOpen = wrap.classList.contains('open');
-        wrap.classList.toggle('open', !isOpen);
-        chevron && chevron.classList.toggle('open', !isOpen);
-    });
-});
-</script>

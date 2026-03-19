@@ -821,18 +821,29 @@ img {
   }
   .products-grid-wrap.open { max-height: 9999px; }
 
-  /* ── Products grid: 2-column cards ───────────── */
+  /* ── Products grid: horizontal scroll row ────── */
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 12px 0;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 12px;
+    padding: 14px 0 14px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
   }
+  .products-grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-  /* ── Product card: compact app-tile ─────────── */
+  /* ── Product card: fixed width snap tile ─────── */
   .product-card {
-    padding: 12px;
+    flex: 0 0 75vw;
+    max-width: 280px;
+    min-width: 220px;
+    padding: 14px;
     border-radius: 14px;
     gap: 0;
+    scroll-snap-align: start;
   }
   .product-card:hover { transform: none; }  /* no hover lift on touch */
 
@@ -875,6 +886,31 @@ img {
     font-size: 12px;
     border-radius: 8px;
     justify-content: center;
+  }
+
+  /* ── View More button (end of each section) ─── */
+  .section-view-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 16px;
+  }
+  .section-view-more a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    padding: 7px 20px;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .section-view-more a:active {
+    background: var(--primary);
+    color: #000;
   }
 
   /* ── Features section ────────────────────────── */
