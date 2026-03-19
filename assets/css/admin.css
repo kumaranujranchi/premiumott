@@ -359,6 +359,56 @@ tr:hover td {
     border-color: var(--stat-red);
 }
 
+/* ─── Mobile Utility Classes ─────────────────── */
+
+/* Hamburger button – hidden on desktop */
+.mob-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.mob-menu-btn:hover { background: rgba(255,255,255,0.08); }
+
+/* Sidebar close (X) button – hidden on desktop */
+.sidebar-close-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 4px;
+    margin-left: auto;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.sidebar-close-btn:hover { color: #fff; }
+
+/* Full-screen overlay behind open sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+/* Prevent body scroll when sidebar drawer is open */
+body.sidebar-open { overflow: hidden; }
+
+/* ─── Breakpoints ─────────────────────────────── */
+
 @media (max-width: 1024px) {
     .stats-grid-hound {
         grid-template-columns: repeat(2, 1fr);
@@ -366,7 +416,60 @@ tr:hover td {
 }
 
 @media (max-width: 768px) {
-    .sidebar { display: none; }
+    /* Sidebar: slide-in drawer */
+    .sidebar {
+        display: flex !important;
+        transform: translateX(-260px);
+        transition: transform 0.25s cubic-bezier(.4, 0, .2, 1);
+        z-index: 1001;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Show close button inside sidebar on mobile */
+    .sidebar-close-btn { display: flex; }
+
+    /* Main content: no sidebar offset */
     .main-content { margin-left: 0; }
+
+    /* Top nav */
+    .top-nav { padding: 0 14px; gap: 10px; }
+    .mob-menu-btn { display: flex; }
+    .search-bar { flex: 1; min-width: 0; width: auto; padding: 8px 14px; }
+    .nav-actions { gap: 8px; }
+
+    /* Hide "Go to Website" label on mobile – keep icon */
+    .go-to-website-text { display: none; }
+
+    /* Stats: 2-column on tablets */
+    .stats-grid-hound { grid-template-columns: repeat(2, 1fr); }
+    .hound-stat-card { padding: 18px; }
+    .stat-info .stat-value { font-size: 22px; }
+
+    /* Content padding */
+    .content-body { padding: 16px; }
+    .card-body-hound { padding: 12px 10px; }
+
+    /* Tables: horizontal scroll container */
+    .hound-table { min-width: 560px; }
+
+    /* Card header wrap when button + title are tight */
+    .card-header-hound { gap: 10px; }
+}
+
+@media (max-width: 480px) {
+    /* Stats: 1-column on small phones */
     .stats-grid-hound { grid-template-columns: 1fr; }
+    .stat-icon { display: none; }
+
+    /* Top nav */
+    .top-nav { padding: 0 10px; height: 56px; }
+
+    /* Content */
+    .content-body { padding: 12px; }
+
+    /* Smaller buttons */
+    .btn-hound { font-size: 12px; padding: 7px 12px; }
 }
