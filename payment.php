@@ -20,13 +20,20 @@ if (!$product) {
 
 include_once 'includes/config.php';
 $order_id = isset($_GET['order_id']) ? (int) $_GET['order_id'] : 0;
-$amount   = $product['discounted_price'];
-$note     = 'PremiumOTT-' . $order_id;
-$upi_url  = "upi://pay?pa={$upi_id}&pn=" . urlencode($payee_name) . "&am={$amount}&tn=" . urlencode($note) . "&cu=INR";
-// qrserver.com — same API that worked in the original version
-$qr_src   = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=" . urlencode($upi_url) . "&ecc=H&margin=1";
 
-$symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
+// Price in original currency
+$currency    = $product['currency'] ?? 'INR';
+$amount      = (float) $product['discounted_price'];
+$symbol      = ($currency === 'INR') ? '₹' : '$';
+
+// Convert to INR for UPI payment (UPI only accepts INR)
+$amount_inr  = ($currency === 'USD')
+               ? (int) round($amount * getUsdToInrRate($usd_inr_rate_fallback))
+               : (int) round($amount);
+
+$note     = 'PremiumOTT-' . $order_id;
+$upi_url  = "upi://pay?pa={$upi_id}&pn=" . urlencode($payee_name) . "&am={$amount_inr}&tn=" . urlencode($note) . "&cu=INR";
+$qr_src   = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=" . urlencode($upi_url) . "&ecc=H&margin=1";
 ?>
 
 <style>
@@ -297,13 +304,16 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
                 <div class="pay-product-type"><?php echo htmlspecialchars($product['license_type']); ?></div>
             </div>
             <div class="pay-amount-pill">
-                <?php echo $symbol; ?><?php echo number_format((float)$amount, 0); ?>
+                <?php echo $symbol . number_format($amount, 0); ?>
+                <?php if ($currency === 'USD'): ?>
+                    <span style="font-size:13px;font-weight:600;opacity:.75;">≈&nbsp;₹<?php echo number_format($amount_inr, 0); ?></span>
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- QR Code section -->
         <div class="pay-qr-section">
-            <div class="pay-qr-label">Scan QR to Pay ₹<?php echo number_format((float)$amount, 0); ?></div>
+            <div class="pay-qr-label">Scan QR to Pay ₹<?php echo number_format($amount_inr, 0); ?></div>
             <div class="pay-qr-sub">Open any UPI app → Scan QR → Pay → Then fill details below</div>
             <div class="qr-frame">
                 <img src="<?php echo htmlspecialchars($qr_src); ?>"
@@ -341,7 +351,7 @@ $symbol = ($product['currency'] ?? 'USD') === 'INR' ? '₹' : '$';
             </div>
             <div class="how-step">
                 <div class="how-num">2</div>
-                <div class="how-text">Scan QR &amp;<br>pay ₹<?php echo number_format((float)$amount, 0); ?></div>
+                <div class="how-text">Scan QR &amp;<br>pay ₹<?php echo number_format($amount_inr, 0); ?></div>
             </div>
             <div class="how-step">
                 <div class="how-num">3</div>

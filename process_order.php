@@ -1,6 +1,7 @@
 <?php
 include 'includes/db.php';
 include 'includes/user_auth.php';
+include_once 'includes/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id   = (int)  ($_POST['product_id'] ?? 0);
@@ -15,8 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die('Invalid Product');
     }
 
-    // Always use the real product price — never trust user-submitted amount
-    $amount_entered = (float) $product['discounted_price'];
+    // Always use the real product price — never trust user-submitted amount.
+    // Convert USD → INR so the stored amount matches what the customer actually paid.
+    $currency       = $product['currency'] ?? 'INR';
+    $base_price     = (float) $product['discounted_price'];
+    $amount_entered = ($currency === 'USD')
+                      ? (float) round($base_price * getUsdToInrRate($usd_inr_rate_fallback))
+                      : $base_price;
 
     if ($order_id > 0) {
         $stmt = $pdo->prepare("
@@ -41,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'customer_email'    => $email,
                 'customer_whatsapp' => $whatsapp,
                 'requirements'      => $requirements,
-                'total_amount'      => $product['discounted_price'],
+                'total_amount'      => $amount_entered,  // already INR (converted if USD)
                 'status'            => 'Pending',
                 'transaction_id'    => $utr,
                 'upi_payer_name'    => $upi_payer,
