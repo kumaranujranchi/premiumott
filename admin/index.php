@@ -21,7 +21,7 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Premium OTT Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/admin.css?v=4">
+    <link rel="stylesheet" href="../assets/css/admin.css?v=5">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">

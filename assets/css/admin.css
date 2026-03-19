@@ -472,14 +472,14 @@ body.sidebar-open { overflow: hidden; }
     /* Main content: no sidebar offset */
     .main-content { margin-left: 0; width: 100%; max-width: 100vw; overflow-x: hidden; }
 
+    /* Hide search bar, settings, go-to-website on mobile */
+    .mob-hide-nav { display: none !important; }
+
     /* Top nav */
     .top-nav { padding: 0 14px; gap: 10px; }
     .mob-menu-btn { display: flex; }
     .search-bar { flex: 1; min-width: 0; width: auto; padding: 8px 14px; }
     .nav-actions { gap: 8px; }
-
-    /* Hide "Go to Website" label on mobile – keep icon */
-    .go-to-website-text { display: none; }
 
     /* Stats: 2-column on tablets */
     .stats-grid-hound { grid-template-columns: repeat(2, 1fr); }

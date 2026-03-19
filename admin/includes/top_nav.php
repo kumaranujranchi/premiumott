@@ -4,18 +4,21 @@
         <i data-lucide="menu" style="width:22px;height:22px;"></i>
     </button>
 
-    <div class="search-bar">
+    <!-- Search bar: hidden on mobile -->
+    <div class="search-bar mob-hide-nav">
         <i data-lucide="search" style="width: 16px; color: var(--text-dim); margin-right: 10px;"></i>
         <input type="text" placeholder="Search products, orders...">
     </div>
 
     <div class="nav-actions">
-        <a href="../index" class="nav-link" target="_blank"
+        <!-- Go to Website: hidden on mobile -->
+        <a href="../index" class="nav-link mob-hide-nav" target="_blank"
             style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; margin-right: 10px;">
             <i data-lucide="external-link" style="width: 16px;"></i>
-            <span class="go-to-website-text">Go to Website</span>
+            <span>Go to Website</span>
         </a>
-        <a href="#" class="nav-link"><i data-lucide="settings" style="width: 20px;"></i></a>
+        <!-- Settings: hidden on mobile -->
+        <a href="#" class="nav-link mob-hide-nav"><i data-lucide="settings" style="width: 20px;"></i></a>
         <a href="#" class="nav-link"><i data-lucide="bell" style="width: 20px;"></i></a>
         <div class="user-profile">
             <div class="user-avatar"
