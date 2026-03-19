@@ -33,6 +33,17 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
     <main class="main-content">
         <?php include 'includes/top_nav.php'; ?>
 
+        <?php if (isset($_SESSION['flash'])): 
+            $flash = $_SESSION['flash'];
+            unset($_SESSION['flash']);
+        ?>
+            <div style="margin: 16px 0;">
+                <div style="padding: 12px 16px; border-radius: 6px; color: #fff; <?php echo ($flash['type'] === 'success') ? 'background:#2E7D32;' : 'background:#F44336;'; ?>">
+                    <?php echo htmlspecialchars($flash['message']); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="content-body">
             <!-- Hound Styled Stats Grid -->
             <div class="stats-grid-hound">
