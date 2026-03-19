@@ -80,12 +80,17 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
             <div class="hound-card">
                 <div class="card-header-hound">
                     <h3 class="card-title-hound">Manage Products</h3>
-                    <a href="add_product" class="btn-hound btn-hound-primary">
-                        <i data-lucide="plus" style="width: 16px;"></i> <span>Add New</span>
-                    </a>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <a href="add_product" class="btn-hound btn-hound-primary">
+                            <i data-lucide="plus" style="width: 16px;"></i> <span>Add New</span>
+                        </a>
+                        <button class="section-toggle-btn open" id="prodToggleBtn" onclick="toggleProducts()">
+                            <i data-lucide="chevron-down" class="toggle-chevron" style="width:16px;height:16px;"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body-hound">
-                    <div style="overflow-x: auto;">
+                <div class="card-body-hound collapsible-body open" id="prodBody">
+                    <div style="overflow-x: auto;" class="hound-table-wrap mob-hide">
                         <table class="hound-table">
                             <thead>
                                 <tr>
@@ -155,7 +160,53 @@ $pending_orders = $pdo->query("SELECT COUNT(*) FROM orders WHERE LOWER(status) =
                             </tbody>
                         </table>
                     </div>
-                </div>
+
+                    <!-- Mobile card list (shown on small screens instead of table) -->
+                    <div class="product-card-list">
+                        <?php foreach ($products as $p): ?>
+                        <div class="prod-mob-card">
+                            <div class="prod-mob-thumb">
+                                <?php if ($p['image']): ?>
+                                    <img src="../<?php echo htmlspecialchars($p['image']); ?>" alt="">
+                                <?php else: ?>
+                                    <i data-lucide="package" style="width:20px;color:#555;"></i>
+                                <?php endif; ?>
+                            </div>
+                            <div class="prod-mob-info">
+                                <div class="prod-mob-name"><?php echo htmlspecialchars($p['name']); ?></div>
+                                <div class="prod-mob-meta">
+                                    <?php echo htmlspecialchars($p['category']); ?> &middot;
+                                    <?php echo $p['currency'] == 'INR' ? '₹' : '$'; ?><?php echo $p['discounted_price']; ?>
+                                </div>
+                                <span class="<?php echo $p['is_active'] ? 'prod-mob-status-active' : 'prod-mob-status-inactive'; ?>">
+                                    <?php echo $p['is_active'] ? 'Active' : 'Inactive'; ?>
+                                </span>
+                            </div>
+                            <div class="prod-mob-actions">
+                                <a href="edit_product?id=<?php echo $p['id']; ?>" class="btn-hound"
+                                   style="background:rgba(255,255,255,0.05);color:#fff;padding:6px;">
+                                    <i data-lucide="edit-3" style="width:16px;"></i>
+                                </a>
+                                <a href="delete_product?id=<?php echo $p['id']; ?>" class="btn-hound"
+                                   style="background:rgba(244,67,54,0.1);color:#F44336;padding:6px;"
+                                   onclick="return confirm('Delete this product?')">
+                                    <i data-lucide="trash-2" style="width:16px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                </div><!-- /collapsible-body -->
+
+<script>
+function toggleProducts() {
+    var btn  = document.getElementById('prodToggleBtn');
+    var body = document.getElementById('prodBody');
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+}
+</script>
             </div>
         </div>
     </main>
