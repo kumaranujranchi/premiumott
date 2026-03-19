@@ -154,81 +154,96 @@ $currencyMap = [
                 } else {
                     // Show multiple sections
                     $sections = ['New Arrivals', 'Hot Deals', 'Limited Stock', 'Coming Soon', 'Special Offers'];
-                    foreach ($sections as $section) {
+                    foreach ($sections as $sIdx => $section) {
                         $stmt = $pdo->prepare("SELECT * FROM products WHERE section = ? AND is_active = 1 ORDER BY created_at DESC LIMIT 6");
                         $stmt->execute([$section]);
                         $sectionProducts = $stmt->fetchAll();
 
                         if (empty($sectionProducts))
                             continue;
+                        $isFirst = ($sIdx === 0);
                         ?>
-                        <div class="section-header" style="margin-top: <?php echo $section == 'New Arrivals' ? '0' : '60px'; ?>">
-                            <div>
-                                <h2 class="section-title"><?php echo $section; ?></h2>
-                                <p class="section-subtitle">
-                                    <?php
-                                    echo match ($section) {
-                                        'New Arrivals' => 'Latest software added to our marketplace.',
-                                        'Hot Deals' => 'Trending software with massive savings.',
-                                        'Limited Stock' => 'Grab these before they are gone forever.',
-                                        'Coming Soon' => 'Get ready for these upcoming amazing deals.',
-                                        'Special Offers' => 'Exclusive discounts for our premium members.',
-                                        default => 'Hand-picked software with the biggest discounts.'
-                                    };
-                                    ?>
-                                </p>
-                            </div>
-                            <a href="index?section=<?php echo urlencode($section); ?>" class="view-all-link">View All <i
-                                    data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
-                        </div>
-
-                        <div class="products-grid">
-                            <?php foreach ($sectionProducts as $product):
-                                $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
-                                // Resolve image path and check file existence to avoid broken images
-                                $imagePath = $product['image'] ?? '';
-                                $hasImage = $imagePath && file_exists(__DIR__ . '/' . ltrim($imagePath, '/'));
-                                ?>
-                                <div class="product-card">
-                                    <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
-                                    <?php if ($hasImage): ?>
-                                        <div class="product-banner">
-                                            <img src="<?php echo htmlspecialchars($imagePath); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                                style="width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 16px;">
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="product-icon" style="background: <?php echo $product['color']; ?>15;">
-                                            <i data-lucide="<?php echo $icon; ?>"
-                                                style="width: 32px; height: 32px; color: <?php echo $product['color']; ?>;"></i>
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="product-header">
-                                        <h3 class="product-name"><?php echo $product['name']; ?></h3>
-                                        <div class="product-rating">
-                                            <i data-lucide="star" style="width: 14px; height: 14px; fill: #F59E0B; color: #F59E0B;"></i>
-                                            <span><?php echo $product['rating']; ?></span>
-                                        </div>
-                                    </div>
-                                    <p class="product-tagline"><?php echo $product['tagline']; ?></p>
-                                    <p class="product-description"><?php echo $product['description']; ?></p>
-                                    <div class="product-pricing">
-                                        <div class="prices">
-                                            <span
-                                                class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['discounted_price']; ?></span>
-                                            <span
-                                                class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['original_price']; ?></span>
-                                        </div>
-                                        <span class="license-badge"><?php echo $product['license_type']; ?></span>
-                                    </div>
-                                    <a href="product?id=<?php echo $product['id']; ?>" class="view-deal-btn">
-                                        <span>View Deal</span> <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                                    </a>
+                        <div style="margin-top: <?php echo $isFirst ? '0' : '12px'; ?>">
+                            <!-- Collapsible section header -->
+                            <div class="section-header js-section-toggle"
+                                 data-target="section-<?php echo $sIdx; ?>"
+                                 style="margin-top:0;">
+                                <div>
+                                    <h2 class="section-title"><?php echo $section; ?></h2>
+                                    <p class="section-subtitle">
+                                        <?php
+                                        echo match ($section) {
+                                            'New Arrivals' => 'Latest software added to our marketplace.',
+                                            'Hot Deals' => 'Trending software with massive savings.',
+                                            'Limited Stock' => 'Grab these before they are gone forever.',
+                                            'Coming Soon' => 'Get ready for these upcoming amazing deals.',
+                                            'Special Offers' => 'Exclusive discounts for our premium members.',
+                                            default => 'Hand-picked software with the biggest discounts.'
+                                        };
+                                        ?>
+                                    </p>
                                 </div>
-                            <?php endforeach; ?>
+                                <div style="display:flex;align-items:center;gap:10px;">
+                                    <a href="index?section=<?php echo urlencode($section); ?>" class="view-all-link"
+                                       onclick="event.stopPropagation()">View All <i
+                                            data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
+                                    <i data-lucide="chevron-down"
+                                       class="section-chevron <?php echo $isFirst ? 'open' : ''; ?>"
+                                       style="width:20px;height:20px;flex-shrink:0;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Collapsible products grid -->
+                            <div class="products-grid-wrap <?php echo $isFirst ? 'open' : ''; ?>"
+                                 id="section-<?php echo $sIdx; ?>">
+                                <div class="products-grid">
+                                    <?php foreach ($sectionProducts as $product):
+                                        $icon = isset($iconMap[$product['icon']]) ? $iconMap[$product['icon']] : 'users';
+                                        $imagePath = $product['image'] ?? '';
+                                        $hasImage = $imagePath && file_exists(__DIR__ . '/' . ltrim($imagePath, '/'));
+                                        ?>
+                                        <div class="product-card">
+                                            <div class="discount-badge"><?php echo $product['discount_percent']; ?>% OFF</div>
+                                            <?php if ($hasImage): ?>
+                                                <div class="product-banner">
+                                                    <img src="<?php echo htmlspecialchars($imagePath); ?>"
+                                                         alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                                         style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:16px;">
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="product-icon" style="background:<?php echo $product['color']; ?>15;">
+                                                    <i data-lucide="<?php echo $icon; ?>"
+                                                       style="width:32px;height:32px;color:<?php echo $product['color']; ?>;"></i>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div class="product-header">
+                                                <h3 class="product-name"><?php echo $product['name']; ?></h3>
+                                                <div class="product-rating">
+                                                    <i data-lucide="star" style="width:14px;height:14px;fill:#F59E0B;color:#F59E0B;"></i>
+                                                    <span><?php echo $product['rating']; ?></span>
+                                                </div>
+                                            </div>
+                                            <p class="product-tagline"><?php echo $product['tagline']; ?></p>
+                                            <p class="product-description"><?php echo $product['description']; ?></p>
+                                            <div class="product-pricing">
+                                                <div class="prices">
+                                                    <span class="price-current"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['discounted_price']; ?></span>
+                                                    <span class="price-original"><?php echo $currencyMap[$product['currency'] ?? 'USD']; ?><?php echo $product['original_price']; ?></span>
+                                                </div>
+                                                <span class="license-badge"><?php echo $product['license_type']; ?></span>
+                                            </div>
+                                            <a href="product?id=<?php echo $product['id']; ?>" class="view-deal-btn">
+                                                <span>View Deal</span>
+                                                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div><!-- /products-grid-wrap -->
                         </div>
                         <?php
                     }
-                }
+                } // end else (multiple sections)
             } catch (PDOException $e) {
                 echo '<div style="padding: 40px; text-align: center; color: var(--text-muted);">';
                 echo '<p>Products are temporarily unavailable. Please run the required database update.</p>';
@@ -271,3 +286,38 @@ $currencyMap = [
 </div>
 
 <?php include 'includes/footer.php'; ?>
+
+<!-- ── Bottom App Navigation Bar ─────────────────────── -->
+<nav class="app-bottom-nav">
+    <a href="index" class="active">
+        <i data-lucide="home"></i>
+        <span>Home</span>
+    </a>
+    <a href="index?category=SaaS">
+        <i data-lucide="layers"></i>
+        <span>SaaS</span>
+    </a>
+    <a href="index?section=Hot+Deals">
+        <i data-lucide="zap"></i>
+        <span>Hot Deals</span>
+    </a>
+    <a href="<?php echo isUserLoggedIn() ? 'profile' : 'login'; ?>">
+        <i data-lucide="user-circle"></i>
+        <span><?php echo isUserLoggedIn() ? 'Profile' : 'Sign In'; ?></span>
+    </a>
+</nav>
+
+<script>
+// Collapsible section accordion
+document.querySelectorAll('.js-section-toggle').forEach(function(header) {
+    header.addEventListener('click', function() {
+        var targetId = this.getAttribute('data-target');
+        var wrap     = document.getElementById(targetId);
+        var chevron  = this.querySelector('.section-chevron');
+        if (!wrap) return;
+        var isOpen = wrap.classList.contains('open');
+        wrap.classList.toggle('open', !isOpen);
+        chevron && chevron.classList.toggle('open', !isOpen);
+    });
+});
+</script>
