@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form action="" method="POST" enctype="multipart/form-data">
                         <div class="form-hound-group">
                             <label>Product Banner Image</label>
-                            <div class="upload-area" onclick="document.getElementById('image-input').click()"
+                            <div class="upload-area upload-area-hound" onclick="document.getElementById('image-input').click()"
                                 style="background: var(--bg-input); border: 2px dashed var(--border); padding: 40px; text-align: center; border-radius: 4px; cursor: pointer;">
                                 <div id="image-preview" style="display: none; margin-bottom: 15px;">
                                     <img id="preview-img"
@@ -100,8 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-hound-group" style="grid-column: span 2;">
+                        <div class="form-grid-2col">
+                            <div class="form-hound-group span-2">
                                 <label>Product Name</label>
                                 <input type="text" name="name" class="form-hound-control"
                                     placeholder="e.g. Netflix Premium UHD" required>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </select>
                             </div>
 
-                            <div class="form-hound-group" style="grid-column: span 2;">
+                            <div class="form-hound-group span-2">
                                 <label>Description</label>
                                 <textarea name="description" class="form-hound-control" rows="4"
                                     placeholder="Detailed product perks..."></textarea>
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
 
-                            <div class="form-hound-group" style="grid-column: span 2;">
+                            <div class="form-hound-group span-2">
                                 <label>Features (One per line)</label>
                                 <textarea name="features" class="form-hound-control" rows="5" placeholder="Feature 1
 Feature 2

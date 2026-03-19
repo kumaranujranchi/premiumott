@@ -559,3 +559,38 @@ body.sidebar-open { overflow: hidden; }
     .product-card-list { display: none !important; }
     .hound-table-wrap { display: block !important; }
 }
+
+/* ─── Form 2-Column Grid (Edit/Add Product) ─── */
+.form-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.form-grid-2col .span-2 { grid-column: span 2; }
+
+@media (max-width: 640px) {
+    .form-grid-2col {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .form-grid-2col .span-2 { grid-column: span 1; }
+
+    /* Card header: stack title + action button on mobile */
+    .card-header-hound {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .card-header-hound .card-title-hound {
+        flex: 1 1 100%;
+        font-size: 14px;
+    }
+    .card-header-hound .btn-hound {
+        font-size: 12px;
+        padding: 7px 12px;
+    }
+
+    /* Product banner upload area: less padding on mobile */
+    .upload-area-hound {
+        padding: 20px !important;
+    }
+}
